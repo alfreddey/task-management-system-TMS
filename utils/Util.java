@@ -7,18 +7,6 @@ import services.ProjectService;
 import services.UserService;
 
 public class Util {
-    public static void seedDatabase(ProjectService projectService, UserService userService) throws Exception {
-        userService.addAdminUser("alfred", "a");
-
-        userService.addRegularUser("scar", "r");
-
-        projectService.addSoftwareProject("Azure Project", "sdfkj dfa", 12, 1324.32);
-        projectService.addSoftwareProject("AWS Project", "dfa dfa", 102, 13240.32);
-        projectService.addSoftwareProject("Oracle Project", "sdf5grgadfkj dfa", 42, 12024.32);
-        projectService.addHardwareProject("IT Project", "sdf5grgadfkj dfa", 42, 12024.32, 10394);
-        projectService.addHardwareProject("Engineering Project", "sdf5grgadfkj dfa", 42, 12024.32, 10394);
-    }
-
     public static void displayTableHeader(int rowWidth, String format, Object... headerTexts) {
         System.out.println("\n" + "+" + "-".repeat(rowWidth) + "+");
         System.out.printf(format, headerTexts);
@@ -74,5 +62,40 @@ public class Util {
         IntStream
                 .range(0, menus.size())
                 .forEach(i -> System.out.printf("%d. %s\n", i + 1, menus.get(i)));
+    }
+
+    public static void seedDatabase(ProjectService projectService, UserService userService) throws Exception {
+        userService.addAdminUser("alfred", "a");
+
+        userService.addRegularUser("scar", "r");
+
+        projectService.addSoftwareProject(
+                "Azure Project",
+                "sdfkj dfa",
+                12,
+                1324.32);
+        projectService.addSoftwareProject(
+                "AWS Project",
+                "dfa dfa",
+                102,
+                13240.32);
+        projectService.addSoftwareProject(
+                "Oracle Project",
+                "sdf5grgadfkj dfa",
+                42,
+                12024.32);
+
+        projectService.addHardwareProject(
+                "IT Project",
+                "sdf5grgadfkj dfa",
+                42,
+                12024.32,
+                10394);
+        projectService.addHardwareProject(
+                "Engineering Project",
+                "sdf5grgadfkj dfa",
+                42,
+                12024.32,
+                10394);
     }
 }

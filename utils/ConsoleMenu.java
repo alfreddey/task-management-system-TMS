@@ -3,10 +3,11 @@ package utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
+import models.AdminUser;
 import models.Project;
 import models.ProjectType;
+import models.RegularUser;
 import models.User;
 import models.UserRole;
 import services.ProjectService;
@@ -59,7 +60,7 @@ public class ConsoleMenu {
         } while (running);
     }
 
-    public void signInUser() {
+    private void signInUser() {
         boolean signedIn = false;
 
         do {
@@ -99,10 +100,53 @@ public class ConsoleMenu {
         } while (!signedIn);
     };
 
-    public void registerUser() {
+    private void registerUser() {
+        String input;
+        String name;
+        String email;
+
+        Util.displayAsHeading("Register User portal");
+
+        Util.displayAsPrompt("Welcome, enter your name here");
+        name = scanner.nextLine();
+
+        Util.displayAsPrompt("Enter your email");
+        email = scanner.nextLine();
+
+        boolean valid = true;
+        do {
+            try {
+                Util.displayAsPrompt("Enter your role (Admin - A / Regular - R)");
+                input = scanner.nextLine();
+
+                if (input.equalsIgnoreCase("A")) {
+                    user = new AdminUser(name, email);
+                    userService.addUser(user);
+
+                    Util.displayText(String.format("\nUser %s added successfully\n", name));
+
+                    mainMenu();
+                    valid = true;
+                } else if (input.equalsIgnoreCase("R")) {
+                    user = new RegularUser(name, email);
+                    userService.addUser(user);
+
+                    Util.displayText(String.format("\nUser %s added successfully\n", name));
+
+                    projectCatalog();
+
+                    valid = true;
+                } else {
+                    valid = false;
+                    throw new Exception("Incorrect role. Please enter A for admin, and R for regular");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
     };
 
-    public void mainMenu() {
+    private void mainMenu() {
         ArrayList<String> menuList = new ArrayList<>();
 
         menuList.add("Manage Projects");
@@ -162,7 +206,7 @@ public class ConsoleMenu {
     private void manageTaskMenu() {
     }
 
-    public void projectCatalog() {
+    private void projectCatalog() {
         ArrayList<String> menuList = new ArrayList<>();
 
         menuList.add(String.format(
@@ -242,7 +286,7 @@ public class ConsoleMenu {
                 });
     };
 
-    public void viewAllProjects() {
+    private void viewAllProjects() {
         projectService.displayAllProjects();
 
         boolean running = true;
@@ -275,7 +319,7 @@ public class ConsoleMenu {
         } while (running);
     };
 
-    public void projectDetailsMenuForRegularUser(Project project) {
+    private void projectDetailsMenuForRegularUser(Project project) {
         ArrayList<String> menuItems = new ArrayList<>();
 
         menuItems.add("Add new task");
@@ -314,7 +358,7 @@ public class ConsoleMenu {
         } while (running);
     }
 
-    public void projectDetailsMenuForAdminUser(Project project) {
+    private void projectDetailsMenuForAdminUser(Project project) {
         ArrayList<String> menuItems = new ArrayList<>();
 
         menuItems.add("Add new task");
@@ -372,6 +416,6 @@ public class ConsoleMenu {
         throw new UnsupportedOperationException("Unimplemented method 'updateTaskStatus'");
     }
 
-    public void manageProjectMenu() {
+    private void manageProjectMenu() {
     };
 }
