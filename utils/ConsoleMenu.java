@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import models.AdminUser;
+import models.HardwareProject;
 import models.Project;
 import models.ProjectType;
 import models.RegularUser;
+import models.SoftwareProject;
 import models.Task;
 import models.TaskStatus;
 import models.User;
@@ -674,7 +676,90 @@ public class ConsoleMenu {
     }
 
     private void createNewProject() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createNewProject'");
+        try {
+            if (user.getRole() != UserRole.ADMIN) {
+                Util.displayAsError("Access denied. Only Admins can create projects");
+                return;
+            }
+
+            Util.displayAsHeading("Create a new Project");
+
+            Util.displayText("Enter the project details below to create a new one");
+
+            Util.displayAsPrompt("\nEnter project name");
+            String name = scanner.nextLine();
+
+            double budget = -1;
+            do {
+                try {
+                    Util.displayAsPrompt("\nEnter budget amount");
+                    budget = Double.parseDouble(scanner.nextLine());
+
+                    if (budget <= 0) {
+                        throw new Exception("Please enter an amount greater than 0");
+                    }
+                } catch (Exception e) {
+                    Util.displayAsError(e.getMessage());
+                }
+            } while (budget <= 0);
+
+            int teamSize = 0;
+            do {
+                try {
+                    Util.displayAsPrompt("\nEnter team size (>=1)");
+                    teamSize = Integer.parseInt(scanner.nextLine());
+
+                    if (teamSize <= 0) {
+                        throw new Exception("Please an amount greater than 0");
+                    }
+                } catch (Exception e) {
+                    Util.displayAsError(e.getMessage());
+                }
+            } while (teamSize <= 0);
+
+            Util.displayAsPrompt("\nEnter description");
+            String description = scanner.nextLine();
+
+            boolean valid = true;
+            Project project = null;
+            do {
+                Util.displayAsPrompt("\nEnter the project type(SOFTWARE (S) /HARDWARE (H))");
+                String type = scanner.nextLine().toUpperCase();
+
+                switch (type) {
+                    case "S":
+                        project = new SoftwareProject(name, description, teamSize, budget);
+                        valid = true;
+                        break;
+                    case "H":
+                        double materialCost = 0;
+                        do {
+                            try {
+                                Util.displayAsPrompt("\nEnter material cost (>=1)");
+                                materialCost = Integer.parseInt(scanner.nextLine());
+
+                                if (materialCost <= 0) {
+                                    throw new Exception("Please enter an amount greater than 1");
+                                }
+                            } catch (Exception e) {
+                                Util.displayAsError(e.getMessage());
+                            }
+
+                        } while (materialCost <= 0);
+
+                        project = new HardwareProject(name, description, teamSize, budget, materialCost);
+                        valid = true;
+                        break;
+                    default:
+                        Util.displayAsError("`Project type must be either HARDWARE OR SOFTWARE");
+                        valid = false;
+                }
+            } while (!valid);
+
+            projectService.addProject(project);
+            Util.displayText("\nProject added successfully");
+        } catch (Exception e) {
+            Util.displayAsError(e.getMessage());
+        }
     };
 }
