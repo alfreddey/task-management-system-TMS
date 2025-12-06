@@ -33,17 +33,17 @@ public class ProjectService {
             return;
         }
 
-        throw new Exception("Project array is full");
+        throw new Exception("Project list is full");
     }
 
-    public Project getProjectById(String id) {
+    public Project getProjectById(String id) throws Exception {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].getId().equals(id)) {
                 return projects[i];
             }
         }
 
-        return null;
+        throw new Exception("User not found");
     }
 
     public Project[] getAllProjects() {
@@ -83,7 +83,7 @@ public class ProjectService {
                 });
     }
 
-    public void displayProjectDetails(Project project) {
+    public void displayProjectDetails(Project project) throws Exception {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
                 projects[i].displayProject();
@@ -91,7 +91,7 @@ public class ProjectService {
             }
         }
 
-        System.out.println("Project Not found");
+        throw new Exception("Project not found");
     }
 
     public void addSoftwareProject(String name,
