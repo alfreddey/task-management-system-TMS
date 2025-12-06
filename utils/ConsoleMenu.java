@@ -11,23 +11,27 @@ import models.RegularUser;
 import models.User;
 import models.UserRole;
 import services.ProjectService;
+import services.ReportService;
 import services.UserService;
 
 public class ConsoleMenu {
     private UserService userService;
     private ProjectService projectService;
+    private ReportService reportService;
     private Scanner scanner;
     private User user;
 
-    public ConsoleMenu(Scanner scanner, UserService userService, ProjectService projectService) {
+    public ConsoleMenu(Scanner scanner, UserService userService, ProjectService projectService,
+            ReportService reportService) {
         this.scanner = scanner;
         this.userService = userService;
         this.projectService = projectService;
+        this.reportService = reportService;
         this.user = null;
     }
 
     public ConsoleMenu(Scanner scanner) {
-        this(scanner, UserService.getService(), ProjectService.getService());
+        this(scanner, UserService.getService(), ProjectService.getService(), ReportService.getService());
     }
 
     public void start() throws Exception {
@@ -105,18 +109,18 @@ public class ConsoleMenu {
         String name;
         String email;
 
-        Util.displayAsHeading("Register User portal");
+        Util.displayAsHeading("Registration portal");
 
         Util.displayAsPrompt("Welcome, enter your name here");
         name = scanner.nextLine();
 
-        Util.displayAsPrompt("Enter your email");
+        Util.displayAsPrompt("\nEnter your email");
         email = scanner.nextLine();
 
         boolean valid = true;
         do {
             try {
-                Util.displayAsPrompt("Enter your role (Admin - A / Regular - R)");
+                Util.displayAsPrompt("\nEnter your role (Admin - A / Regular - R)");
                 input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("A")) {
@@ -147,17 +151,23 @@ public class ConsoleMenu {
     };
 
     private void mainMenu() {
-        ArrayList<String> menuList = new ArrayList<>();
-
-        menuList.add("Manage Projects");
-        menuList.add("Manage Tasks");
-        menuList.add("View Status Reports");
-        menuList.add("Switch User");
-        menuList.add("Exit");
-
         boolean running = true;
         do {
             try {
+                if (user.getRole() != UserRole.ADMIN) {
+                    Util.displayAsError("Access denied. Only Admins can access the main menu");
+                    projectCatalog();
+                    return;
+                }
+
+                ArrayList<String> menuList = new ArrayList<>();
+
+                menuList.add("Manage Projects");
+                menuList.add("Manage Tasks");
+                menuList.add("View Status Reports");
+                menuList.add("Switch User");
+                menuList.add("Exit");
+
                 Util.displayAsHeading("Java Task Management System");
 
                 Util.displayText(
@@ -198,9 +208,33 @@ public class ConsoleMenu {
     };
 
     private void switchUser() {
+        try {
+            Util.displayAsHeading("SWITCH USER");
+
+            Util.displayAsPrompt("Enter the email to switch user");
+            String email = scanner.nextLine();
+
+            user = userService.getUserByEmail(email);
+
+            switch (user.getRole()) {
+                case ADMIN:
+                    // Go to main menu IF user is ADMIN
+                    mainMenu();
+                    break;
+                case REGULAR:
+                    // Go to project catalog menu, otherwise
+                    projectCatalog();
+                    break;
+            }
+        } catch (Exception e) {
+            Util.displayAsError(e.getMessage());
+        }
     }
 
     private void viewStatusReports() {
+        Util.displayAsHeading("PROJECT STATUS REPORT");
+
+        reportService.generateReport(projectService);
     }
 
     private void manageTaskMenu() {
