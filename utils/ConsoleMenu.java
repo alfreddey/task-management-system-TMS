@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import models.Project;
 import models.ProjectType;
 import models.User;
+import models.UserRole;
 import services.ProjectService;
 import services.UserService;
 
@@ -261,17 +262,114 @@ public class ConsoleMenu {
 
                 project = projectService.getProjectById(input);
                 running = false;
+
+                if (user.getRole() == UserRole.ADMIN) {
+                    projectDetailsMenuForAdminUser(project);
+                } else {
+                    projectDetailsMenuForRegularUser(project);
+                }
+
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
             }
         } while (running);
-
-        // Go to Project Details menu
-        projectDetailsOf(project);
     };
 
-    public void projectDetailsOf(Project project) {
+    public void projectDetailsMenuForRegularUser(Project project) {
+        ArrayList<String> menuItems = new ArrayList<>();
 
+        menuItems.add("Add new task");
+        menuItems.add("Update task status");
+        menuItems.add("Back to Main Menu");
+
+        boolean running = true;
+        do {
+            try {
+                Util.displayAsHeading(String.format("Project Details: %s", project.getId()));
+
+                projectService.displayProjectDetails(project);
+
+                Util.displayAsMenu("Options", menuItems);
+
+                Util.displayAsPrompt("\nEnter your choice");
+
+                String input = scanner.nextLine();
+
+                switch (input) {
+                    case "1":
+                        addNewTask(project);
+                        break;
+                    case "2":
+                        updateTaskStatus(project);
+                        break;
+                    case "3":
+                        running = false;
+                        break;
+                    default:
+                        throw new Exception("Invalid input, please choose between 1 and 4");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (running);
+    }
+
+    public void projectDetailsMenuForAdminUser(Project project) {
+        ArrayList<String> menuItems = new ArrayList<>();
+
+        menuItems.add("Add new task");
+        menuItems.add("Update task status");
+        menuItems.add("Remove task");
+        menuItems.add("Back to Main Menu");
+
+        boolean running = true;
+        do {
+            try {
+                Util.displayAsHeading(String.format("Project Details: %s", project.getId()));
+
+                projectService.displayProjectDetails(project);
+
+                Util.displayAsMenu("Options", menuItems);
+
+                Util.displayAsPrompt("\nEnter your choice");
+
+                String input = scanner.nextLine();
+
+                switch (input) {
+                    case "1":
+                        addNewTask(project);
+                        break;
+                    case "2":
+                        updateTaskStatus(project);
+                        break;
+                    case "3":
+                        removeTaskById();
+                        break;
+                    case "4":
+                        running = false;
+                        break;
+                    default:
+                        throw new Exception("Invalid input, please choose between 1 and 4");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (running);
+    }
+
+    private void removeTaskById() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeTaskById'");
+    }
+
+    private void addNewTask(Project project) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addNewTask'");
+    }
+
+    private void updateTaskStatus(Project project) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateTaskStatus'");
     }
 
     public void manageProjectMenu() {
