@@ -64,14 +64,14 @@ public abstract class Project {
         System.out.printf("\nCompletion Rate: %.2f%%\n", this.getCompletionRate());
     }
 
-    public Task getTaskById(String id) {
+    public Task getTaskById(String id) throws Exception {
         for (int i = 0; i < taskCount; i++) {
-            if (tasks[i].getId().equals(id)) {
+            if (tasks[i].getId().equalsIgnoreCase(id)) {
                 return tasks[i];
             }
         }
 
-        return null;
+        throw new Exception("Task not found");
     }
 
     public void addTask(Task task) {

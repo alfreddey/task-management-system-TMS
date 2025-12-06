@@ -8,6 +8,8 @@ import models.AdminUser;
 import models.Project;
 import models.ProjectType;
 import models.RegularUser;
+import models.Task;
+import models.TaskStatus;
 import models.User;
 import models.UserRole;
 import services.ProjectService;
@@ -160,13 +162,13 @@ public class ConsoleMenu {
                     return;
                 }
 
-                ArrayList<String> menuList = new ArrayList<>();
+                ArrayList<String> menuItems = new ArrayList<>();
 
-                menuList.add("Manage Projects");
-                menuList.add("Manage Tasks");
-                menuList.add("View Status Reports");
-                menuList.add("Switch User");
-                menuList.add("Exit");
+                menuItems.add("Manage Projects");
+                menuItems.add("Manage Tasks");
+                menuItems.add("View Status Reports");
+                menuItems.add("Switch User");
+                menuItems.add("Exit");
 
                 Util.displayAsHeading("Java Task Management System");
 
@@ -176,7 +178,7 @@ public class ConsoleMenu {
                                         user.getName()),
                                 user.getRole()));
 
-                Util.displayAsMenu("Main Menu", menuList);
+                Util.displayAsMenu("Main Menu", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -241,22 +243,22 @@ public class ConsoleMenu {
     }
 
     private void projectCatalog() {
-        ArrayList<String> menuList = new ArrayList<>();
+        ArrayList<String> menuItems = new ArrayList<>();
 
-        menuList.add(String.format(
+        menuItems.add(String.format(
                 "View All Projects (%s)",
                 projectService.getProjectCount()));
-        menuList.add("Software Projects only");
-        menuList.add("Hardware Projects only");
-        menuList.add("Search by Budget Range");
-        menuList.add("Go back");
+        menuItems.add("Software Projects only");
+        menuItems.add("Hardware Projects only");
+        menuItems.add("Search by Budget Range");
+        menuItems.add("Go back");
 
         boolean running = true;
         do {
             try {
                 Util.displayAsHeading("Project Catalog");
 
-                Util.displayAsMenu("Filter Options", menuList);
+                Util.displayAsMenu("Filter Options", menuItems);
 
                 Util.displayAsPrompt("\nEnter filter choice");
 
@@ -288,6 +290,65 @@ public class ConsoleMenu {
     };
 
     private void searchByBudgetRange() {
+        Util.displayAsHeading("SEARCH BY BUDGET RANGE");
+
+        double minimumBudgetRange = -1;
+        do {
+            try {
+                Util.displayAsPrompt("Please enter minimum budget range ( > 0 )");
+                String input = scanner.nextLine();
+
+                minimumBudgetRange = Double.parseDouble(input);
+
+            } catch (NumberFormatException e) {
+                Util.displayAsError(e.getMessage());
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (minimumBudgetRange <= 0);
+
+        double maximumBudgetRange = -1;
+        do {
+            try {
+                Util.displayAsPrompt("Please enter maximum budget range ( > 0 )");
+                String input = scanner.nextLine();
+
+                maximumBudgetRange = Double.parseDouble(input);
+
+            } catch (NumberFormatException e) {
+                Util.displayAsError(e.getMessage());
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (maximumBudgetRange <= 0);
+
+        Project[] projects = projectService.getAllProjects();
+
+        final int ROW_WIDTH = 132;
+        Util.displayTableHeader(
+                ROW_WIDTH,
+                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                "ID",
+                "PROJECT NAME",
+                "TYPE",
+                "TEAM SIZE",
+                "BUDGET",
+                "DESCRIPTION");
+
+        for (Project project : projects) {
+            if (project.getBudget() >= minimumBudgetRange
+                    && project.getBudget() <= maximumBudgetRange) {
+                Util.displayTableRow(
+                        ROW_WIDTH,
+                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                        project.getId(),
+                        project.getName(),
+                        project.getType(),
+                        project.getTeamSize(),
+                        project.getBudget(),
+                        project.getDescription());
+            }
+        }
     };
 
     private void viewProjectByType(ProjectType type) {
@@ -441,13 +502,115 @@ public class ConsoleMenu {
     }
 
     private void addNewTask(Project project) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addNewTask'");
+        Util.displayAsHeading("ADD NEW TASK");
+
+        Util.displayAsPrompt("Enter task name");
+        String taskName = scanner.nextLine();
+
+        // Read and validate ProjectID
+        boolean valid = false;
+        String projectId;
+        do {
+            Util.displayAsPrompt("\nEnter assigned project ID");
+            projectId = scanner.nextLine();
+
+            try {
+                ValidationUtils.validateProjectID(projectId);
+
+                project = projectService.getProjectById(projectId);
+
+                valid = true;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
+
+        // Read and validate Task Status
+        boolean done = false;
+        TaskStatus taskStatus = null;
+        do {
+            Util.displayAsPrompt("\nEnter initial status (Pending (P) /In Progress (I) /Completed (C))");
+            String input = scanner.nextLine().toUpperCase();
+
+            switch (input) {
+                case "P":
+                    taskStatus = TaskStatus.PENDING;
+                    done = true;
+                    break;
+                case "I":
+                    taskStatus = TaskStatus.IN_PROGRESS;
+                    done = true;
+                    break;
+                case "C":
+                    taskStatus = TaskStatus.COMPLETED;
+                    done = true;
+                    break;
+                default:
+                    Util.displayAsError(
+                            "Error: Invalid input. Please enter a valid status (Pending/In Progress/Completed)");
+            }
+        } while (!done);
+
+        project.addTask(new Task(taskName, taskStatus, projectId));
+
+        Util.displayText(String.format(
+                "\nTask '%s' added successfully to Project %s\n",
+                taskName,
+                project.getId()));
     }
 
     private void updateTaskStatus(Project project) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateTaskStatus'");
+        Util.displayAsHeading("UPDATE TASK STATUS");
+
+        boolean valid = false;
+        Task task = null;
+        do {
+            try {
+                Util.displayAsPrompt("\nEnter task ID (or Q to quit)");
+                String input = scanner.nextLine();
+
+                if (input.equalsIgnoreCase("Q"))
+                    return;
+
+                String taskId = input;
+                ValidationUtils.validateTaskID(taskId);
+
+                task = project.getTaskById(taskId);
+                valid = true;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage() + ". " + "Please try again");
+            }
+        } while (!valid);
+
+        valid = false;
+        String taskStatus;
+        do {
+            Util.displayAsPrompt("\nEnter new status (Pending (P) / In Progress (I) / Completed (C))");
+            taskStatus = scanner.nextLine().toUpperCase();
+
+            switch (taskStatus) {
+                case "P":
+                    task.setStatus(TaskStatus.PENDING);
+                    valid = true;
+                    break;
+                case "I":
+                    task.setStatus(TaskStatus.IN_PROGRESS);
+                    valid = true;
+                    break;
+                case "C":
+                    task.setStatus(TaskStatus.COMPLETED);
+                    valid = true;
+                    break;
+                default:
+                    Util.displayAsError("Error: Invalid Status. Please choose from Pending / In progress / Completed");
+            }
+        } while (!valid);
+
+        Util.displayText(
+                String.format(
+                        "\nTask '%s' marked as %s\n",
+                        task.getName(),
+                        task.getStatus()));
     }
 
     private void manageProjectMenu() {

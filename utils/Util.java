@@ -92,7 +92,7 @@ public class Util {
                 12024.32,
                 10394);
         projectService.addHardwareProject(
-                "Engineering Project",
+                "Engineer PR",
                 "sdf5grgadfkj dfa",
                 42,
                 12024.32,

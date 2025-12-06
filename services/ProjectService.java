@@ -36,14 +36,14 @@ public class ProjectService {
         throw new Exception("Project array is full");
     }
 
-    public Project getProjectById(String id) {
+    public Project getProjectById(String id) throws Exception {
         for (int i = 0; i < projectCount; i++) {
-            if (projects[i].getId().equals(id)) {
+            if (projects[i].getId().equalsIgnoreCase(id)) {
                 return projects[i];
             }
         }
 
-        return null;
+        throw new Exception("Project not found");
     }
 
     public Project[] getAllProjects() {
