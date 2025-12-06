@@ -43,7 +43,7 @@ public class ProjectService {
             }
         }
 
-        throw new Exception("User not found");
+        throw new Exception("Project not found");
     }
 
     public Project[] getAllProjects() {
