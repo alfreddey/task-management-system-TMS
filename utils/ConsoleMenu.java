@@ -482,7 +482,7 @@ public class ConsoleMenu {
                         updateTaskStatus(project);
                         break;
                     case "3":
-                        removeTaskById();
+                        removeTaskById(project);
                         break;
                     case "4":
                         running = false;
@@ -496,9 +496,32 @@ public class ConsoleMenu {
         } while (running);
     }
 
-    private void removeTaskById() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeTaskById'");
+    private void removeTaskById(Project project) {
+        Util.displayAsHeading("REMOVE TASK BY ID");
+
+        boolean valid = false;
+        Task task = null;
+        do {
+            try {
+                System.out.print("Welcome, to delete a task please enter its ID here (or Q to return): ");
+                String taskId = scanner.nextLine();
+
+                if (taskId.equalsIgnoreCase("Q"))
+                    return;
+
+                ValidationUtils.validateTaskID(taskId);
+
+                task = project.removeTaskById(taskId);
+                valid = true;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
+
+        Util.displayText(
+                String.format(
+                        "\nTask '%s' has been deleted successfully\n",
+                        task.getName()));
     }
 
     private void addNewTask(Project project) {
@@ -614,5 +637,44 @@ public class ConsoleMenu {
     }
 
     private void manageProjectMenu() {
+        boolean exit = false;
+        do {
+            try {
+                Util.displayAsHeading("PROJECT MANAGEMENT MENU");
+
+                ArrayList<String> menuItems = new ArrayList<>();
+
+                menuItems.add("Create New Project");
+                menuItems.add("View Project Catalog");
+                menuItems.add("Back to Main Menu");
+
+                Util.displayAsMenu("Project Management Menu", menuItems);
+
+                Util.displayAsPrompt("\nEnter your choice");
+
+                String input = scanner.nextLine();
+
+                switch (input) {
+                    case "1":
+                        createNewProject();
+                        break;
+                    case "2":
+                        projectCatalog();
+                        break;
+                    case "3":
+                        exit = true;
+                        break;
+                    default:
+                        throw new Exception("Invalid input. Please choose an option between 1 and 3");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!exit);
+    }
+
+    private void createNewProject() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createNewProject'");
     };
 }

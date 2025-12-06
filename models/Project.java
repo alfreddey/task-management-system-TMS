@@ -126,4 +126,29 @@ public abstract class Project {
     public ProjectType getType() {
         return type;
     }
+
+    public Task removeTaskById(String taskId) throws Exception {
+        Task[] newArray = new Task[MAX_TASKS];
+
+        Task taskTarget = null;
+        int index = 0;
+        for (int i = 0; i < taskCount; i++) {
+            Task task = tasks[i];
+
+            if (!task.getId().equalsIgnoreCase(taskId)) {
+                newArray[index++] = task;
+            } else {
+                taskTarget = task;
+            }
+        }
+
+        if (taskTarget == null) {
+            throw new Exception("Task to be removed not found");
+        }
+
+        taskCount -= 1;
+        System.arraycopy(newArray, 0, tasks, 0, MAX_TASKS);
+
+        return taskTarget;
+    }
 }
