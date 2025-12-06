@@ -1,7 +1,9 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 import models.Project;
 import models.ProjectType;
@@ -210,6 +212,33 @@ public class ConsoleMenu {
     };
 
     private void viewProjectByType(ProjectType type) {
+        Project[] projects = projectService.getAllProjects();
+
+        final int ROW_WIDTH = 132;
+        Util.displayTableHeader(
+                ROW_WIDTH,
+                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                "ID",
+                "PROJECT NAME",
+                "TYPE",
+                "TEAM SIZE",
+                "BUDGET",
+                "DESCRIPTION");
+
+        Arrays
+                .stream(projects)
+                .filter(project -> project.getType() == type)
+                .forEach(project -> {
+                    Util.displayTableRow(
+                            ROW_WIDTH,
+                            "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                            project.getId(),
+                            project.getName(),
+                            project.getType(),
+                            project.getTeamSize(),
+                            project.getBudget(),
+                            project.getDescription());
+                });
     };
 
     public void viewAllProjects() {
