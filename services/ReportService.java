@@ -32,7 +32,7 @@ public class ReportService {
             var project = projects[i];
 
             var taskCount = project.getTaskCount();
-            var completionRate = project.getCompletionRate();
+            var completionRate = Math.round(project.getCompletionRate());
 
             var completedTaskCount = Math.round((completionRate / 100) * taskCount);
 
