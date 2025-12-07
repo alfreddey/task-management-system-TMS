@@ -84,7 +84,7 @@ public class ProjectService {
                 });
     }
 
-    public void displayProjectDetails(Project project) throws Exception {
+    public void displayProjectDetails(Project project) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
                 projects[i].displayProject();
@@ -92,7 +92,7 @@ public class ProjectService {
             }
         }
 
-        throw new Exception("Project not found");
+        throw new ProjectNotFoundException("Project not found");
     }
 
     public void addSoftwareProject(String name,
