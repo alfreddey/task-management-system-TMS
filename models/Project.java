@@ -3,6 +3,8 @@ package models;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import utils.exceptions.TaskNotFoundException;
+
 public abstract class Project {
     private static final int MAX_TASKS = 999;
     private static int index = 0;
@@ -64,14 +66,14 @@ public abstract class Project {
         System.out.printf("\nCompletion Rate: %.2f%%\n", this.getCompletionRate());
     }
 
-    public Task getTaskById(String id) throws Exception {
+    public Task getTaskById(String id) throws TaskNotFoundException {
         for (int i = 0; i < taskCount; i++) {
             if (tasks[i].getId().equalsIgnoreCase(id)) {
                 return tasks[i];
             }
         }
 
-        throw new Exception("Task not found");
+        throw new TaskNotFoundException("Task not found");
     }
 
     public void addTask(Task task) {
@@ -127,7 +129,7 @@ public abstract class Project {
         return type;
     }
 
-    public Task removeTaskById(String taskId) throws Exception {
+    public Task removeTaskById(String taskId) throws TaskNotFoundException {
         Task[] newArray = new Task[MAX_TASKS];
 
         Task taskTarget = null;
@@ -143,7 +145,7 @@ public abstract class Project {
         }
 
         if (taskTarget == null) {
-            throw new Exception("Task to be removed not found");
+            throw new TaskNotFoundException("Task to be removed not found");
         }
 
         taskCount -= 1;
