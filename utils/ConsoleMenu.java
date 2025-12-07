@@ -242,6 +242,47 @@ public class ConsoleMenu {
     }
 
     private void manageTaskMenu() {
+        ArrayList<String> menuItems = new ArrayList<>();
+
+        menuItems.add("Add new task");
+        menuItems.add("Update task status");
+        menuItems.add("Remove task");
+        menuItems.add("Back to Main Menu");
+
+        boolean running = true;
+        Project project = null;
+        do {
+            try {
+                Util.displayAsHeading("Manage Tasks");
+
+                Util.displayText("Welcome to the Manage Tasks portal");
+
+                Util.displayAsMenu("Task Menu", menuItems);
+
+                Util.displayAsPrompt("\nEnter your choice");
+
+                String input = scanner.nextLine();
+
+                switch (input) {
+                    case "1":
+                        addNewTask(project);
+                        break;
+                    case "2":
+                        updateTaskStatus();
+                        break;
+                    case "3":
+                        removeTaskById();
+                        break;
+                    case "4":
+                        running = false;
+                        break;
+                    default:
+                        throw new Exception("Invalid input, please choose between 1 and 4");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (running);
     }
 
     private void projectCatalog() {
@@ -441,7 +482,7 @@ public class ConsoleMenu {
                         addNewTask(project);
                         break;
                     case "2":
-                        updateTaskStatus(project);
+                        updateTaskStatus();
                         break;
                     case "3":
                         running = false;
@@ -481,10 +522,10 @@ public class ConsoleMenu {
                         addNewTask(project);
                         break;
                     case "2":
-                        updateTaskStatus(project);
+                        updateTaskStatus();
                         break;
                     case "3":
-                        removeTaskById(project);
+                        removeTaskById();
                         break;
                     case "4":
                         running = false;
@@ -498,14 +539,14 @@ public class ConsoleMenu {
         } while (running);
     }
 
-    private void removeTaskById(Project project) {
+    private void removeTaskById() {
         Util.displayAsHeading("REMOVE TASK BY ID");
 
         boolean valid = false;
         Task task = null;
         do {
             try {
-                System.out.print("Welcome, to delete a task please enter its ID here (or Q to return): ");
+                Util.displayAsPrompt("Welcome, to delete a task please enter its ID here (or Q to return)");
                 String taskId = scanner.nextLine();
 
                 if (taskId.equalsIgnoreCase("Q"))
@@ -513,6 +554,15 @@ public class ConsoleMenu {
 
                 ValidationUtils.validateTaskID(taskId);
 
+                Util.displayAsPrompt("\nEnter ID of project associated with this task");
+                String input = scanner.nextLine();
+
+                if (input.equalsIgnoreCase("Q"))
+                    return;
+
+                ValidationUtils.validateProjectID(input);
+
+                Project project = projectService.getProjectById(input);
                 task = project.removeTaskById(taskId);
                 valid = true;
             } catch (Exception e) {
@@ -584,7 +634,7 @@ public class ConsoleMenu {
                 project.getId()));
     }
 
-    private void updateTaskStatus(Project project) {
+    private void updateTaskStatus() {
         Util.displayAsHeading("UPDATE TASK STATUS");
 
         boolean valid = false;
@@ -592,14 +642,22 @@ public class ConsoleMenu {
         do {
             try {
                 Util.displayAsPrompt("\nEnter task ID (or Q to quit)");
+                String taskId = scanner.nextLine();
+
+                if (taskId.equalsIgnoreCase("Q"))
+                    return;
+
+                ValidationUtils.validateTaskID(taskId);
+
+                Util.displayAsPrompt("\nEnter ID of project associated with this task");
                 String input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("Q"))
                     return;
 
-                String taskId = input;
-                ValidationUtils.validateTaskID(taskId);
+                ValidationUtils.validateProjectID(input);
 
+                Project project = projectService.getProjectById(input);
                 task = project.getTaskById(taskId);
                 valid = true;
             } catch (Exception e) {
