@@ -7,6 +7,7 @@ import models.HardwareProject;
 import models.Project;
 import models.SoftwareProject;
 import utils.Util;
+import utils.exceptions.ProjectNotFoundException;
 
 public class ProjectService {
     private final int MAX_PROJECTS = 999;
@@ -36,14 +37,14 @@ public class ProjectService {
         throw new Exception("Project list is full");
     }
 
-    public Project getProjectById(String id) throws Exception {
+    public Project getProjectById(String id) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].getId().equalsIgnoreCase(id)) {
                 return projects[i];
             }
         }
 
-        throw new Exception("Project not found");
+        throw new ProjectNotFoundException("Project not found");
     }
 
     public Project[] getAllProjects() {
