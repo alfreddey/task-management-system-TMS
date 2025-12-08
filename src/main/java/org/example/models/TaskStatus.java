@@ -1,4 +1,7 @@
 package org.example.models;
 
 public enum TaskStatus {
+    PENDING,
+    IN_PROGRESS,
+    COMPLETED
 }

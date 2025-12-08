@@ -1,17 +1,26 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Scanner;
+
+import org.example.services.ProjectService;
+import org.example.services.ReportService;
+import org.example.services.UserService;
+import org.example.utils.ConsoleMenu;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Scanner scanner = new Scanner(System.in);
+        UserService userService = UserService.getService();
+        ProjectService projectService = ProjectService.getService();
+        ReportService reportService = ReportService.getService();
 
-        for (int i = 1; i <= 9995; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        try {
+            ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService);
+            consoleMenu.start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            scanner.close();
         }
     }
 }
