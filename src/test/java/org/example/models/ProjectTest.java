@@ -25,7 +25,7 @@ class ProjectTest {
         softwareProject.addTask(
                 new Task(
                         "Task Name 1",
-                        TaskStatus.PENDING,
+                        TaskStatus.COMPLETED,
                         "P001"
                 ));
     }
@@ -59,13 +59,61 @@ class ProjectTest {
         softwareProject.addTask(
                 new Task(
                         "adf",
-                        TaskStatus.COMPLETED,
+                        TaskStatus.PENDING,
                         "P001"
                 )
         );
 
         var completionRate = softwareProject.getCompletionRate();
         assertEquals(100 * (2 / 3.0), completionRate);
+    }
+
+    @DisplayName("Test for the case where one task is IN_PROGRESS")
+    @Test
+    void testGetCompletionRateOneInProgressCase() {
+        // Add two more tasks to softwareProject
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.COMPLETED,
+                        "P001"
+                )
+        );
+
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.IN_PROGRESS,
+                        "P001"
+                )
+        );
+
+        var completionRate = softwareProject.getCompletionRate();
+        assertEquals(100 * (2 / 3.0), completionRate);
+    }
+
+    @DisplayName("Test for the case where all tasks a completed")
+    @Test
+    void testGetCompletionRateAllCompletedCase() {
+        // Add two more tasks to softwareProject
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.COMPLETED,
+                        "P001"
+                )
+        );
+
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.COMPLETED,
+                        "P001"
+                )
+        );
+
+        var completionRate = softwareProject.getCompletionRate();
+        assertEquals(100, completionRate);
     }
 
     @Test
