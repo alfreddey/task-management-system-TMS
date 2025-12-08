@@ -1,25 +1,75 @@
 package org.example.models;
 
+import org.example.services.ProjectService;
+import org.example.utils.exceptions.InvalidTaskIDException;
+import org.example.utils.exceptions.TaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProjectTest {
+    ProjectService projectService;
+    Project softwareProject;
+    Project hardwareProject;
 
-  @BeforeEach
-  void setUp() {
-  }
+    @DisplayName("Create new software and hardware projects")
+    @BeforeEach
+    void setUp() {
+        projectService = ProjectService.getService();
 
-  @Test
-  void addTask() {
-  }
+        softwareProject = new SoftwareProject("Software PR", "description", 12, 34.4);
+        hardwareProject = new HardwareProject("Hardware PR", "desc", 34, 09.23, 23);
 
-  @Test
-  void getCompletionRate() {
-  }
+        softwareProject.addTask(
+                new Task(
+                        "Task Name 1",
+                        TaskStatus.PENDING,
+                        "P001"
+                ));
+    }
 
-  @Test
-  void removeTaskById() {
-  }
+    @DisplayName("Test for task addition")
+    @Test
+    void testAddTask() throws Exception {
+        assertEquals("T001", softwareProject.getTaskById("T001").getId());
+    }
+
+    @Test
+    void testTaskNotFoundException() {
+        Exception caughtException = assertThrows(TaskNotFoundException.class, () -> {
+            softwareProject.getTaskById("T990");
+        });
+
+        assertEquals("Task not found", caughtException.getMessage());
+    }
+
+    @Test
+    void testGetCompletionRate() {
+        // Add two more tasks to softwareProject
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.COMPLETED,
+                        "P001"
+                )
+        );
+
+        softwareProject.addTask(
+                new Task(
+                        "adf",
+                        TaskStatus.COMPLETED,
+                        "P001"
+                )
+        );
+
+        var completionRate = softwareProject.getCompletionRate();
+        assertEquals(100 * (2 / 3.0), completionRate);
+    }
+
+    @Test
+    void testRemoveTaskById() {
+
+    }
 }
