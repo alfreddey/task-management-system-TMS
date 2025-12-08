@@ -7,6 +7,7 @@ import org.example.models.HardwareProject;
 import org.example.models.Project;
 import org.example.models.SoftwareProject;
 import org.example.utils.Util;
+import org.example.utils.exceptions.ProjectNotFoundException;
 
 public class ProjectService {
     private final int MAX_PROJECTS = 999;
@@ -36,14 +37,14 @@ public class ProjectService {
         throw new Exception("Project list is full");
     }
 
-    public Project getProjectById(String id) throws Exception {
+    public Project getProjectById(String id) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].getId().equalsIgnoreCase(id)) {
                 return projects[i];
             }
         }
 
-        throw new Exception("Project not found");
+        throw new ProjectNotFoundException("Project not found");
     }
 
     public Project[] getAllProjects() {
@@ -83,7 +84,7 @@ public class ProjectService {
                 });
     }
 
-    public void displayProjectDetails(Project project) throws Exception {
+    public void displayProjectDetails(Project project) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
                 projects[i].displayProject();
@@ -91,7 +92,7 @@ public class ProjectService {
             }
         }
 
-        throw new Exception("Project not found");
+        throw new ProjectNotFoundException("Project not found");
     }
 
     public void addSoftwareProject(String name,

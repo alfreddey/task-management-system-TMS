@@ -1,7 +1,6 @@
 package org.example.models;
 
 import java.util.HashMap;
-import org.example.models.ProjectType;
 
 public class HardwareProject extends Project {
     private double materialCost;

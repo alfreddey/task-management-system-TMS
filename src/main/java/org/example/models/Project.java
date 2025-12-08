@@ -2,8 +2,10 @@ package org.example.models;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import org.example.models.ProjectType;
-import org.example.models.TaskStatus;
+import java.util.stream.IntStream;
+
+import org.example.utils.Util;
+import org.example.utils.exceptions.TaskNotFoundException;
 
 public abstract class Project {
     private static final int MAX_TASKS = 999;
@@ -34,46 +36,52 @@ public abstract class Project {
     public abstract HashMap<String, String> getProjectDetails();
 
     public void displayProject() {
-        System.out.printf("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
-                this.name,
-                this.type,
-                this.teamSize,
-                this.budget);
+        Util.displayText(
+                String.format("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
+                        this.name,
+                        this.type,
+                        this.teamSize,
+                        this.budget));
 
-        System.out.println("\nAssociated Tasks:");
+        Util.displayText("Associated Tasks:");
 
         if (taskCount <= 0) {
-            System.out.println("No task added yet. Added tasks will display here.");
+            Util.displayText("No task added yet. Added tasks will display here.");
         } else {
-            // Display header
-            System.out.println("-".repeat(54));
-            System.out.printf("| %-4s | %-20s | %-20s |\n",
+            final int ROW_WIDTH = 52;
+
+            Util.displayTableHeader(
+                    ROW_WIDTH,
+                    "| %-4s | %-20s | %-20s |",
                     "ID",
                     "TASK NAME",
                     "STATUS");
-            System.out.println("-".repeat(54));
 
-            // Display rows
-            for (int i = 0; i < taskCount; i++) {
-                System.out.printf("| %-4s | %-20s | %-20s |\n",
-                        tasks[i].getId(),
-                        tasks[i].getName(),
-                        tasks[i].getStatus());
-                System.out.println("-".repeat(54));
-            }
+            IntStream
+                    .range(0, taskCount)
+                    .forEach(i -> {
+                        var task = tasks[i];
+
+                        Util.displayTableRow(
+                                ROW_WIDTH,
+                                "| %-4s | %-20s | %-20s |",
+                                task.getId(),
+                                task.getName(),
+                                task.getStatus());
+                    });
         }
 
         System.out.printf("\nCompletion Rate: %.2f%%\n", this.getCompletionRate());
     }
 
-    public Task getTaskById(String id) throws Exception {
+    public Task getTaskById(String id) throws TaskNotFoundException {
         for (int i = 0; i < taskCount; i++) {
             if (tasks[i].getId().equalsIgnoreCase(id)) {
                 return tasks[i];
             }
         }
 
-        throw new Exception("Task not found");
+        throw new TaskNotFoundException("Task not found");
     }
 
     public void addTask(Task task) {
@@ -129,7 +137,7 @@ public abstract class Project {
         return type;
     }
 
-    public Task removeTaskById(String taskId) throws Exception {
+    public Task removeTaskById(String taskId) throws TaskNotFoundException {
         Task[] newArray = new Task[MAX_TASKS];
 
         Task taskTarget = null;
@@ -145,7 +153,7 @@ public abstract class Project {
         }
 
         if (taskTarget == null) {
-            throw new Exception("Task to be removed not found");
+            throw new TaskNotFoundException("Task to be removed not found");
         }
 
         taskCount -= 1;
