@@ -69,7 +69,23 @@ class ProjectTest {
     }
 
     @Test
-    void testRemoveTaskById() {
+    void testRemoveTaskById() throws Exception {
+        Task task = new Task(
+                "delete me",
+                TaskStatus.COMPLETED,
+                "P001"
+        );
 
+        softwareProject.addTask(task);
+
+        String taskId = task.getId();
+        softwareProject.removeTaskById(taskId);
+
+        // Check if truly removed
+        Exception caughtException = assertThrows(TaskNotFoundException.class, () -> {
+            softwareProject.getTaskById(taskId);
+        });
+
+        assertEquals("Task not found", caughtException.getMessage());
     }
 }
