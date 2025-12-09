@@ -68,7 +68,7 @@ If you have an idea that would improve this, please fork the repository and crea
 - Open a Pull Request
 
 ## Contact/Support
-Alfred Dey - [alfrednelly246@gmail.com]()
+Alfred Dey - [alfrednelly246@gmail.com](https://alfrednelly246@gmail.com)
 
 Project Link - https://github.com/alfreddey/task-management-system-TMS
 
