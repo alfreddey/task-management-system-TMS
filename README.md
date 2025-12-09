@@ -6,8 +6,7 @@ Manage tasks and projects via a simple console-based task management system
 1. [Installation](#installation)
 2. [Run program](#run-program)
 3. [Contribution](#contributing)
-4. [Contact/Support](#contactsupport)
-5. [Additional Notes](#additional-notes)
+4. [Additional Notes](#additional-notes)
 
 ## Installation
 
@@ -66,11 +65,6 @@ If you have an idea that would improve this, please fork the repository and crea
   ```
 
 - Open a Pull Request
-
-## Contact/Support
-Alfred Dey - [alfrednelly246@gmail.com](https://alfrednelly246@gmail.com)
-
-Project Link - https://github.com/alfreddey/task-management-system-TMS
 
 ## Additional Notes
 
