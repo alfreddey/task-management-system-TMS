@@ -36,7 +36,7 @@ Manage tasks and projects via a simple console-based task management system
 
 2. **Using Command Line:**
    ``` bash
-   mvn exec:java -Dexec.mainClass="com.example.MainClass"
+   mvn exec:java -Dexec.mainClass="org.example.Main"
    ```
 
 ## Contributing
