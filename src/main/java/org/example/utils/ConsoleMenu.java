@@ -16,30 +16,41 @@ import org.example.models.User;
 import org.example.models.UserRole;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
+import org.example.services.TaskService;
 import org.example.services.UserService;
 
 public class ConsoleMenu {
     private UserService userService;
     private ProjectService projectService;
     private ReportService reportService;
+    private TaskService taskService;
     private Scanner scanner;
     private User user;
 
-    public ConsoleMenu(Scanner scanner, UserService userService, ProjectService projectService,
-            ReportService reportService) {
+    public ConsoleMenu(
+            Scanner scanner,
+            UserService userService,
+            ProjectService projectService,
+            ReportService reportService,
+            TaskService taskService) {
         this.scanner = scanner;
         this.userService = userService;
         this.projectService = projectService;
         this.reportService = reportService;
+        this.taskService = taskService;
         this.user = null;
     }
 
     public ConsoleMenu(Scanner scanner) {
-        this(scanner, UserService.getService(), ProjectService.getService(), ReportService.getService());
+        this(
+                scanner,
+                UserService.getService(),
+                ProjectService.getService(),
+                ReportService.getService(),
+                TaskService.getService());
     }
 
     public void start() throws Exception {
-        // Populate the user and project list
         Util.seedDatabase(projectService, userService);
 
         boolean running = true;
@@ -94,11 +105,9 @@ public class ConsoleMenu {
 
                 switch (user.getRole()) {
                     case ADMIN:
-                        // Go to main menu IF user is ADMIN
                         mainMenu();
                         break;
                     case REGULAR:
-                        // Go to project catalog menu, otherwise
                         projectCatalog();
                         break;
                 }
@@ -222,11 +231,9 @@ public class ConsoleMenu {
 
             switch (user.getRole()) {
                 case ADMIN:
-                    // Go to main menu IF user is ADMIN
                     mainMenu();
                     break;
                 case REGULAR:
-                    // Go to project catalog menu, otherwise
                     projectCatalog();
                     break;
             }
@@ -342,9 +349,6 @@ public class ConsoleMenu {
                 String input = scanner.nextLine();
 
                 minimumBudgetRange = Double.parseDouble(input);
-
-            } catch (NumberFormatException e) {
-                Util.displayAsError(e.getMessage());
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
             }
@@ -357,9 +361,6 @@ public class ConsoleMenu {
                 String input = scanner.nextLine();
 
                 maximumBudgetRange = Double.parseDouble(input);
-
-            } catch (NumberFormatException e) {
-                Util.displayAsError(e.getMessage());
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
             }
@@ -439,7 +440,6 @@ public class ConsoleMenu {
                     return;
                 }
 
-                // Throws an exception IF projectID is invalid
                 ValidationUtils.validateProjectID(input);
 
                 project = projectService.getProjectById(input);
@@ -563,7 +563,7 @@ public class ConsoleMenu {
                 ValidationUtils.validateProjectID(input);
 
                 Project project = projectService.getProjectById(input);
-                task = project.removeTaskById(taskId);
+                task = taskService.removeTaskById(project, taskId);
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
@@ -579,11 +579,25 @@ public class ConsoleMenu {
     private void addNewTask(Project project) {
         Util.displayAsHeading("ADD NEW TASK");
 
-        Util.displayAsPrompt("Enter task name");
-        String taskName = scanner.nextLine();
-
-        // Read and validate ProjectID
+        String taskName = null;
         boolean valid = false;
+        do {
+            try {
+                Util.displayAsPrompt("Enter task name");
+                String input = scanner.nextLine();
+
+                if (taskService.getTaskByName(project, input) != null) {
+                    throw new Exception("Duplicate task name found. Change task name to continue.");
+                }
+
+                taskName = input;
+                valid = true;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
+
+        valid = false;
         String projectId;
         do {
             Util.displayAsPrompt("\nEnter assigned project ID");
@@ -600,7 +614,6 @@ public class ConsoleMenu {
             }
         } while (!valid);
 
-        // Read and validate Task Status
         boolean done = false;
         TaskStatus taskStatus = null;
         do {
@@ -626,7 +639,9 @@ public class ConsoleMenu {
             }
         } while (!done);
 
-        project.addTask(new Task(taskName, taskStatus, projectId));
+        taskService.addTaskToProject(
+                project,
+                taskService.createTask(taskName, taskStatus, projectId));
 
         Util.displayText(String.format(
                 "\nTask '%s' added successfully to Project %s\n",
@@ -673,15 +688,15 @@ public class ConsoleMenu {
 
             switch (taskStatus) {
                 case "P":
-                    task.setStatus(TaskStatus.PENDING);
+                    taskService.updateTaskStatus(task, TaskStatus.PENDING);
                     valid = true;
                     break;
                 case "I":
-                    task.setStatus(TaskStatus.IN_PROGRESS);
+                    taskService.updateTaskStatus(task, TaskStatus.IN_PROGRESS);
                     valid = true;
                     break;
                 case "C":
-                    task.setStatus(TaskStatus.COMPLETED);
+                    taskService.updateTaskStatus(task, TaskStatus.COMPLETED);
                     valid = true;
                     break;
                 default:

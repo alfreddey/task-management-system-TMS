@@ -97,7 +97,6 @@ public abstract class Project {
         return Arrays.copyOf(tasks, taskCount);
     }
 
-    // Getters
     public String getId() {
         return id;
     }

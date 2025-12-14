@@ -32,6 +32,18 @@ public class UserService {
         users[userCount++] = user;
     }
 
+    // public User addAdminUser(String name, String email) throws Exception {
+    // var user = new AdminUser(name, email);
+    // addUser(user);
+    // return user;
+    // }
+
+    // public User addRegularUser(String name, String email) throws Exception {
+    // var user = new RegularUser(name, email);
+    // addUser(user);
+    // return user;
+    // }
+
     public void addAdminUser(String name, String email) throws Exception {
         addUser(new AdminUser(name, email));
     }
