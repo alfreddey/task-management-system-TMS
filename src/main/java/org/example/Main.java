@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
+import org.example.services.TaskService;
 import org.example.services.UserService;
 import org.example.utils.ConsoleMenu;
 
@@ -13,9 +14,10 @@ public class Main {
         UserService userService = UserService.getService();
         ProjectService projectService = ProjectService.getService();
         ReportService reportService = ReportService.getService();
+        TaskService taskService = TaskService.getService();
 
         try {
-            ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService);
+            ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService, taskService);
             consoleMenu.start();
         } catch (Exception e) {
             System.out.println(e.getMessage());
