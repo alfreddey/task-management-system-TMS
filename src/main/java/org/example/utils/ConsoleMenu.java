@@ -137,16 +137,14 @@ public class ConsoleMenu {
                 input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("A")) {
-                    user = new AdminUser(name, email);
-                    userService.addUser(user);
+                    user = userService.addAdminUser(name, email);
 
                     Util.displayText(String.format("\nUser %s added successfully\n", name));
 
                     mainMenu();
                     valid = true;
                 } else if (input.equalsIgnoreCase("R")) {
-                    user = new RegularUser(name, email);
-                    userService.addUser(user);
+                    user = userService.addRegularUser(name, email);
 
                     Util.displayText(String.format("\nUser %s added successfully\n", name));
 

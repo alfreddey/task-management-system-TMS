@@ -26,8 +26,7 @@ class ProjectTest {
                 new Task(
                         "Task Name 1",
                         TaskStatus.PENDING,
-                        "P001"
-                ));
+                        "P001"));
     }
 
     @DisplayName("Test for task addition")
@@ -47,22 +46,17 @@ class ProjectTest {
 
     @Test
     void testGetCompletionRate() {
-        // Add two more tasks to softwareProject
         softwareProject.addTask(
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
-                        "P001"
-                )
-        );
+                        "P001"));
 
         softwareProject.addTask(
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
-                        "P001"
-                )
-        );
+                        "P001"));
 
         var completionRate = softwareProject.getCompletionRate();
         assertEquals(100 * (2 / 3.0), completionRate);
