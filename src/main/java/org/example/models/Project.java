@@ -6,14 +6,14 @@ import org.example.utils.exceptions.TaskNotFoundException;
 public abstract class Project {
     private static final int MAX_TASKS = 999;
     private static int index = 0;
-    private int teamSize;
+    private final int teamSize;
     private int taskCount;
-    private double budget;
+    private final double budget;
     protected String id;
     protected String name;
     protected String description;
-    private Task[] tasks;
-    private ProjectType type;
+    private final Task[] tasks;
+    private final ProjectType type;
 
     public Project(String name, String description, int teamSize, double budget, ProjectType type) {
         index += 1;

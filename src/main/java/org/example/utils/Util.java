@@ -34,7 +34,7 @@ public class Util {
     }
 
     public static String capitalizeText(String text) {
-        if (text.isEmpty() || text == null)
+        if (text.isEmpty())
             return text;
 
         String firstCharacter = text.substring(0, 1).toUpperCase();
@@ -49,10 +49,6 @@ public class Util {
         System.out.println("\n" + line);
         System.out.println("| " + text.toUpperCase() + " |");
         System.out.println(line + "\n");
-    }
-
-    public static String colorString(String str) {
-        return "\u001B[33m" + str + "\u001B[0m";
     }
 
     public static void displayAsMenu(String heading, ArrayList<String> menus) {

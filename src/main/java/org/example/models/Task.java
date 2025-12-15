@@ -2,15 +2,12 @@ package org.example.models;
 
 import org.example.interfaces.Completable;
 
-import java.util.Date;
-
 public class Task implements Completable {
     private static int index = 0;
     private TaskStatus status;
-    private String id;
-    private String name;
-    private String projectId;
-    private Date hour;
+    private final String id;
+    private final String name;
+    private final String projectId;
 
     public Task(String name, TaskStatus status, String projectId) {
         index += 1;
@@ -26,7 +23,7 @@ public class Task implements Completable {
 
     public TaskStatus getStatus() {
         return status;
-    };
+    }
 
     public String getName() {
         return name;
@@ -36,12 +33,9 @@ public class Task implements Completable {
         this.status = status;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
     @Override
     public boolean isCompleted() {
         return this.status == TaskStatus.COMPLETED;
-    };
+    }
+
 }

@@ -12,7 +12,7 @@ import org.example.utils.exceptions.ProjectNotFoundException;
 public class ProjectService {
     private final int MAX_PROJECTS = 999;
     private static ProjectService service;
-    private Project[] projects;
+    private final Project[] projects;
     private int projectCount;
 
     private ProjectService() {

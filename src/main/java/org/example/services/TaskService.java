@@ -16,10 +16,6 @@ public class TaskService {
         return service;
     }
 
-    public Task getTaskById(Project project, String taskId) throws TaskNotFoundException {
-        return project.getTaskById(taskId);
-    }
-
     public void updateTaskStatus(Task task, TaskStatus status) {
         task.setStatus(status);
     }
@@ -34,9 +30,9 @@ public class TaskService {
 
     public Task getTaskByName(Project project, String taskName) {
         var tasks = project.getTasks();
-        for (int i = 0; i < tasks.length; i++) {
-            if (tasks[i].getName().equalsIgnoreCase(taskName)) {
-                return tasks[i];
+        for (Task task : tasks) {
+            if (task.getName().equalsIgnoreCase(taskName)) {
+                return task;
             }
         }
 

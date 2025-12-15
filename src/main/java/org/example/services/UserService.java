@@ -9,7 +9,7 @@ public class UserService {
     private static UserService service;
     private final int MAX_USERS = 999;
     private int userCount;
-    private User[] users;
+    private final User[] users;
 
     private UserService() {
         this.users = new User[MAX_USERS];
