@@ -1,9 +1,10 @@
-# DESIGN DECISION 
+# DESIGN DECISION
+
 ## 1. Separation of Concerns and Encapsulation
-The project uses classes to logically organize entities such as **User**, **Project**, **Task**, etc. Each class defines its attributes and behaviours alongside specifying their access specifiers. The project restricts user code from directly accessing fields (by declaring them as private fields) to prevent unexpected updates and makes the code more extensible/open. However, each class provides access to its fields by defining public setter and getter methods.
+The project uses classes to logically organize entities like **User**, **Project**, and **Task**. Each class defines its attributes and behavior using specific access levels. To prevent unintended updates, fields are declared **private**, restricting direct access. Instead, the project provides public **getter and setter** methods to safely view or modify data. For example, the **Project** class uses these methods to manage its internal fields securely.
 
 ## 2. Inheritance
-The project leverage abstract classes to define common attributes and behaviours shared by logically related classes. The **User** class, for instance, defines common attributes such as name, role, etc. that is shared by both **AdminUser** and **RegularUser**. By defining **User** as an abstract class, both **AdminUser** and **RegularUser** can extend this class and include their own properties.
+The project leverages abstract classes to define common attributes and behaviors shared by related entities. The **User** class, for instance, establishes shared properties like `name` and `role`. By defining **User** as an abstract class, both **AdminUser** and **RegularUser** can extend it to inherit these base properties while adding their own specific functionality.
 
 ## 3. Polymorphism
-The project uses polymorphism to redefine certain class methods to promote code reusability. For example, the **Project** abstract class defines an abstract method (**getProjectDetails**) which is overridden and implemented by its concrete classes. The **SoftwareProject** class, for instance, overrides this method to return its attributes, likewise, the **HardwareProject** class. This ensures that these two classes inherit the same method but define custom implementations.
+The project uses polymorphism to redefine specific methods, promoting code reusability. The **Project** abstract class defines an abstract method, **getProjectDetails**, which is implemented by its concrete subclasses. For example, **SoftwareProject** and **HardwareProject** both override this method to return their unique data. This ensures both classes share a consistent interface while providing custom implementations.
