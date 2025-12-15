@@ -61,7 +61,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.getCompletionRate();
+        var completionRate = softwareProject.calculateCompletionRate();
         assertEquals(100 * (2 / 3.0), completionRate);
     }
 
@@ -73,7 +73,6 @@ class ProjectTest {
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
-                        "P001"));
                         "P001"
                 )
         );
@@ -86,7 +85,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.getCompletionRate();
+        var completionRate = softwareProject.calculateCompletionRate();
         assertEquals(100 * (2 / 3.0), completionRate);
     }
 
@@ -110,7 +109,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.getCompletionRate();
+        var completionRate = softwareProject.calculateCompletionRate();
         assertEquals(100, completionRate);
     }
 
