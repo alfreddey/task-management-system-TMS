@@ -260,7 +260,7 @@ public class ConsoleMenu {
 
                 switch (input) {
                     case "1":
-                        addNewTask(project);
+                        addNewTask();
                         break;
                     case "2":
                         updateTaskStatus();
@@ -467,7 +467,7 @@ public class ConsoleMenu {
 
                 switch (input) {
                     case "1":
-                        addNewTask(project);
+                        addNewTask();
                         break;
                     case "2":
                         updateTaskStatus();
@@ -507,7 +507,7 @@ public class ConsoleMenu {
 
                 switch (input) {
                     case "1":
-                        addNewTask(project);
+                        addNewTask();
                         break;
                     case "2":
                         updateTaskStatus();
@@ -564,31 +564,14 @@ public class ConsoleMenu {
                         task.getName()));
     }
 
-    private void addNewTask(Project project) {
+    private void addNewTask() {
         Util.displayAsHeading("ADD NEW TASK");
 
-        String taskName = null;
         boolean valid = false;
-        do {
-            try {
-                Util.displayAsPrompt("Enter task name");
-                String input = scanner.nextLine();
-
-                if (taskService.getTaskByName(project, input) != null) {
-                    throw new Exception("Duplicate task name found. Change task name to continue.");
-                }
-
-                taskName = input;
-                valid = true;
-            } catch (Exception e) {
-                Util.displayAsError(e.getMessage());
-            }
-        } while (!valid);
-
-        valid = false;
         String projectId;
+        Project project = null;
         do {
-            Util.displayAsPrompt("\nEnter assigned project ID");
+            Util.displayAsPrompt("Enter assigned project ID");
             projectId = scanner.nextLine();
 
             try {
@@ -596,6 +579,24 @@ public class ConsoleMenu {
 
                 project = projectService.getProjectById(projectId);
 
+                valid = true;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
+
+        String taskName = null;
+        valid = false;
+        do {
+            try {
+                Util.displayAsPrompt("\nEnter task name");
+                String input = scanner.nextLine();
+
+                if (taskService.getTaskByName(project, input) != null) {
+                    throw new Exception("Duplicate task name found. Change task name to continue.");
+                }
+
+                taskName = input;
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
