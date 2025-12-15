@@ -69,8 +69,6 @@ public class ConsoleMenu {
     }
 
     private void signInUser() {
-        boolean signedIn = false;
-
         do {
             try {
                 Util.displayAsHeading("SIGN IN PORTAL");
@@ -82,7 +80,6 @@ public class ConsoleMenu {
                 String input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("Q")) {
-                    signedIn = true;
                     return;
                 }
 
@@ -104,8 +101,8 @@ public class ConsoleMenu {
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
             }
-        } while (!signedIn);
-    };
+        } while (true);
+    }
 
     private void registerUser() {
         String input;
@@ -149,7 +146,7 @@ public class ConsoleMenu {
                 Util.displayAsError(e.getMessage());
             }
         } while (!valid);
-    };
+    }
 
     private void mainMenu() {
         boolean running = true;
@@ -206,7 +203,7 @@ public class ConsoleMenu {
                 Util.displayAsError(e.getMessage());
             }
         } while (running);
-    };
+    }
 
     private void switchUser() {
         try {
@@ -245,7 +242,6 @@ public class ConsoleMenu {
         menuItems.add("Back to Main Menu");
 
         boolean running = true;
-        Project project = null;
         do {
             try {
                 Util.displayAsHeading("Manage Tasks");
@@ -325,7 +321,7 @@ public class ConsoleMenu {
                 Util.displayAsError(e.getMessage());
             }
         } while (running);
-    };
+    }
 
     private void searchByBudgetRange() {
         Util.displayAsHeading("SEARCH BY BUDGET RANGE");
@@ -381,7 +377,7 @@ public class ConsoleMenu {
                         project.getDescription());
             }
         }
-    };
+    }
 
     private void viewProjectByType(ProjectType type) {
         Project[] projects = projectService.getAllProjects();
@@ -400,24 +396,22 @@ public class ConsoleMenu {
         Arrays
                 .stream(projects)
                 .filter(project -> project.getType() == type)
-                .forEach(project -> {
-                    Util.displayTableRow(
-                            ROW_WIDTH,
-                            "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                            project.getId(),
-                            project.getName(),
-                            project.getType(),
-                            project.getTeamSize(),
-                            project.getBudget(),
-                            project.getDescription());
-                });
-    };
+                .forEach(project -> Util.displayTableRow(
+                        ROW_WIDTH,
+                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                        project.getId(),
+                        project.getName(),
+                        project.getType(),
+                        project.getTeamSize(),
+                        project.getBudget(),
+                        project.getDescription()));
+    }
 
     private void viewAllProjects() {
         projectService.displayAllProjects();
 
         boolean running = true;
-        Project project = null;
+        Project project;
         do {
             try {
                 Util.displayAsPrompt("\nEnter project ID to view details (or 0 to return)");
@@ -443,7 +437,7 @@ public class ConsoleMenu {
                 Util.displayAsError(e.getMessage());
             }
         } while (running);
-    };
+    }
 
     private void projectDetailsMenuForRegularUser(Project project) {
         ArrayList<String> menuItems = new ArrayList<>();
@@ -782,7 +776,7 @@ public class ConsoleMenu {
             Util.displayAsPrompt("\nEnter description");
             String description = scanner.nextLine();
 
-            boolean valid = true;
+            boolean valid;
             Project project = null;
             do {
                 Util.displayAsPrompt("\nEnter the project type(SOFTWARE (S) /HARDWARE (H))");
@@ -823,5 +817,5 @@ public class ConsoleMenu {
         } catch (Exception e) {
             Util.displayAsError(e.getMessage());
         }
-    };
+    }
 }
