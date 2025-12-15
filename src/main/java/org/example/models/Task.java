@@ -12,7 +12,6 @@ public class Task implements Completable {
     private String projectId;
     private Date hour;
 
-    // Constructors
     public Task(String name, TaskStatus status, String projectId) {
         index += 1;
         this.id = String.format("T%03d", index);
@@ -21,7 +20,6 @@ public class Task implements Completable {
         this.projectId = projectId;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
@@ -34,7 +32,6 @@ public class Task implements Completable {
         return name;
     }
 
-    // Setters
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
@@ -43,7 +40,7 @@ public class Task implements Completable {
         this.projectId = projectId;
     }
 
-    // Interface methods
+    @Override
     public boolean isCompleted() {
         return this.status == TaskStatus.COMPLETED;
     };

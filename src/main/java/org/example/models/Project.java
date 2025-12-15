@@ -1,10 +1,6 @@
 package org.example.models;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.stream.IntStream;
-
-import org.example.utils.Util;
 import org.example.utils.exceptions.TaskNotFoundException;
 
 public abstract class Project {
@@ -13,7 +9,6 @@ public abstract class Project {
     private int teamSize;
     private int taskCount;
     private double budget;
-    private double completionRate;
     protected String id;
     protected String name;
     protected String description;
@@ -28,50 +23,8 @@ public abstract class Project {
         this.budget = budget;
         this.teamSize = teamSize;
         this.taskCount = 0;
-        this.completionRate = 0;
         this.tasks = new Task[MAX_TASKS];
         this.type = type;
-    }
-
-    public abstract HashMap<String, String> getProjectDetails();
-
-    public void displayProject() {
-        Util.displayText(
-                String.format("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
-                        this.name,
-                        this.type,
-                        this.teamSize,
-                        this.budget));
-
-        Util.displayText("Associated Tasks:");
-
-        if (taskCount <= 0) {
-            Util.displayText("No task added yet. Added tasks will display here.");
-        } else {
-            final int ROW_WIDTH = 52;
-
-            Util.displayTableHeader(
-                    ROW_WIDTH,
-                    "| %-4s | %-20s | %-20s |",
-                    "ID",
-                    "TASK NAME",
-                    "STATUS");
-
-            IntStream
-                    .range(0, taskCount)
-                    .forEach(i -> {
-                        var task = tasks[i];
-
-                        Util.displayTableRow(
-                                ROW_WIDTH,
-                                "| %-4s | %-20s | %-20s |",
-                                task.getId(),
-                                task.getName(),
-                                task.getStatus());
-                    });
-        }
-
-        System.out.printf("\nCompletion Rate: %.2f%%\n", this.getCompletionRate());
     }
 
     public Task getTaskById(String id) throws TaskNotFoundException {
@@ -121,10 +74,10 @@ public abstract class Project {
         return teamSize;
     }
 
-    public double getCompletionRate() {
+    public double calculateCompletionRate() {
         double count = 0;
         for (int i = 0; i < taskCount; i++) {
-            if (tasks[i].getStatus().equals(TaskStatus.COMPLETED)) {
+            if (tasks[i].isCompleted()) {
                 count++;
             }
         }

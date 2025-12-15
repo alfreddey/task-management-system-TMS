@@ -1,7 +1,5 @@
 package org.example.models;
 
-import java.util.HashMap;
-
 public class HardwareProject extends Project {
     private double materialCost;
 
@@ -12,10 +10,5 @@ public class HardwareProject extends Project {
 
     public HardwareProject(String name, String description, int teamSize, double budget) {
         this(name, description, teamSize, budget, 0);
-    }
-
-    @Override
-    public HashMap<String, String> getProjectDetails() {
-        return null;
     }
 }

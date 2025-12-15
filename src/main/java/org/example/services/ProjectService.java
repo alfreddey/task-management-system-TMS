@@ -55,6 +55,48 @@ public class ProjectService {
         return projectCount;
     }
 
+    public void displayProject(Project project) {
+        int taskCount = project.getTaskCount();
+        var tasks = project.getTasks();
+
+        Util.displayText(
+                String.format("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
+                        project.getName(),
+                        project.getType(),
+                        project.getTeamSize(),
+                        project.getBudget()));
+
+        Util.displayText("Associated Tasks:");
+
+        if (taskCount <= 0) {
+            Util.displayText("No task added yet. Added tasks will display here.");
+        } else {
+            final int ROW_WIDTH = 52;
+
+            Util.displayTableHeader(
+                    ROW_WIDTH,
+                    "| %-4s | %-20s | %-20s |",
+                    "ID",
+                    "TASK NAME",
+                    "STATUS");
+
+            IntStream
+                    .range(0, taskCount)
+                    .forEach(i -> {
+                        var task = tasks[i];
+
+                        Util.displayTableRow(
+                                ROW_WIDTH,
+                                "| %-4s | %-20s | %-20s |",
+                                task.getId(),
+                                task.getName(),
+                                task.getStatus());
+                    });
+        }
+
+        System.out.printf("\nCompletion Rate: %.2f%%\n", project.calculateCompletionRate());
+    }
+
     public void displayAllProjects() {
         final int ROW_WIDTH = 132;
         Util.displayTableHeader(
@@ -87,7 +129,8 @@ public class ProjectService {
     public void displayProjectDetails(Project project) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
-                projects[i].displayProject();
+//                projects[i].displayProject();
+                displayProject(projects[i]);
                 return;
             }
         }

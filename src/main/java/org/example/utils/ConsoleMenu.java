@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import org.example.models.AdminUser;
 import org.example.models.HardwareProject;
 import org.example.models.Project;
 import org.example.models.ProjectType;
-import org.example.models.RegularUser;
 import org.example.models.SoftwareProject;
 import org.example.models.Task;
 import org.example.models.TaskStatus;
@@ -20,11 +18,11 @@ import org.example.services.TaskService;
 import org.example.services.UserService;
 
 public class ConsoleMenu {
-    private UserService userService;
-    private ProjectService projectService;
-    private ReportService reportService;
-    private TaskService taskService;
-    private Scanner scanner;
+    private final UserService userService;
+    private final ProjectService projectService;
+    private final ReportService reportService;
+    private final TaskService taskService;
+    private final Scanner scanner;
     private User user;
 
     public ConsoleMenu(
@@ -39,15 +37,6 @@ public class ConsoleMenu {
         this.reportService = reportService;
         this.taskService = taskService;
         this.user = null;
-    }
-
-    public ConsoleMenu(Scanner scanner) {
-        this(
-                scanner,
-                UserService.getService(),
-                ProjectService.getService(),
-                ReportService.getService(),
-                TaskService.getService());
     }
 
     public void start() throws Exception {
@@ -93,6 +82,7 @@ public class ConsoleMenu {
                 String input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("Q")) {
+                    signedIn = true;
                     return;
                 }
 
