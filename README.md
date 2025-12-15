@@ -3,11 +3,37 @@
 Manage tasks and projects via a simple console-based task management system
 
 # Table of Contents
+1. [Feature Summary](#feature-summary)
 1. [Installation](#installation)
 2. [Run program](#run-program)
 3. [Contribution](#contributing)
 4. [Contact/Support](#contactsupport)
 5. [Additional Notes](#additional-notes)
+
+## Feature Summary
+The project provide the following core functionalities:
+1. **Project Catalog Management**
+    * **Create Projects**: Initialize new projects with specific details like name, budget, team size, and description.
+    * **Specialized project types**: Support for distinct project types (Software and Hardware).
+    * **Advanced filtering**: View full catalog or filter projects by type.
+    * **Budget Search**: Search and filter projects within a specific budget range.
+
+
+2. **Task Operations**
+    * **Task Management**: Add new tasks to specific projects with unique IDs and names.
+    * **Status Tracking**: Assign and update task statuses (**PENDING, IN PROGRESS, AND COMPLETED**) to track workflow.
+    * **Validation**: Validate task names to prevent duplicates.
+
+
+3. **Analytics and Reporting**
+    * **Completion calculation**: Automatically calculate completion rate based on the ratio of completed task to total tasks.
+    * **Status Reports**: Generate a console report that displays the progress for all projects and the average completion rate.
+
+
+4. **Interactive Console Interface**
+    * **Menu Navigation**: Easy-to-use numbered menu options for navigating between sub-menus
+    * **Input validation**: Robust error handling for invalid menu options, project ids, and task ids.
+    * **Formatted Output**: Clean, tabular display for project lists and reports.
 
 ## Installation
 
