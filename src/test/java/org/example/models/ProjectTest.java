@@ -47,14 +47,11 @@ class ProjectTest {
 
     @Test
     void testGetCompletionRate() {
-        // Add two more tasks to softwareProject
         softwareProject.addTask(
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
-                        "P001"
-                )
-        );
+                        "P001"));
 
         softwareProject.addTask(
                 new Task(
@@ -76,6 +73,7 @@ class ProjectTest {
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
+                        "P001"));
                         "P001"
                 )
         );
