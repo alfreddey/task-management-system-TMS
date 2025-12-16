@@ -2,10 +2,10 @@ package org.example.models;
 
 public abstract class User {
     private static int index = 0;
-    private String id;
-    private String name;
-    private String email;
-    private UserRole role;
+    private final String id;
+    private final String name;
+    private final String email;
+    private final UserRole role;
 
     public User(String name, String email, UserRole role) {
         index += 1;

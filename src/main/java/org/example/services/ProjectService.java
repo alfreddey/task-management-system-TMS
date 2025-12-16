@@ -9,17 +9,32 @@ import org.example.models.SoftwareProject;
 import org.example.utils.Util;
 import org.example.utils.exceptions.ProjectNotFoundException;
 
+/**
+ * Manages operations related to projects, including adding, retrieving, and displaying
+ * project information. This class implements the Singleton pattern to ensure
+ * only one instance of the service exists.
+ */
 public class ProjectService {
     private final int MAX_PROJECTS = 999;
     private static ProjectService service;
     private final Project[] projects;
     private int projectCount;
 
+  /**
+   * Private constructor to prevent direct instantiation, enforcing the Singleton pattern.
+   * Initializes the project array and sets the initial project count to zero.
+   */
     private ProjectService() {
         this.projectCount = 0;
         this.projects = new Project[MAX_PROJECTS];
     }
 
+  /**
+   * Returns the singleton instance of the ProjectService.
+   * If the instance does not exist, it creates one.
+   *
+   * @return The single instance of ProjectService.
+   */
     public static ProjectService getService() {
         if (service == null) {
             service = new ProjectService();
@@ -28,6 +43,12 @@ public class ProjectService {
         return service;
     }
 
+  /**
+   * Adds a new project to the service's project list.
+   *
+   * @param project The project to add.
+   * @throws Exception if the project list is full (reaches MAX_PROJECTS).
+   */
     public void addProject(Project project) throws Exception {
         if (projectCount < MAX_PROJECTS) {
             projects[projectCount++] = project;
@@ -37,6 +58,13 @@ public class ProjectService {
         throw new Exception("Project list is full");
     }
 
+  /**
+   * Retrieves a project by its unique ID.
+   *
+   * @param id The ID of the project to retrieve.
+   * @return The Project object with the specified ID.
+   * @throws ProjectNotFoundException if no project with the given ID is found.
+   */
     public Project getProjectById(String id) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].getId().equalsIgnoreCase(id)) {
@@ -47,14 +75,30 @@ public class ProjectService {
         throw new ProjectNotFoundException("Project not found");
     }
 
+  /**
+   * Returns an array containing all projects currently managed by the service.
+   *
+   * @return A copy of the array of all current projects.
+   */
     public Project[] getAllProjects() {
         return Arrays.copyOf(projects, projectCount);
     }
 
+  /**
+   * Returns the current number of projects managed by the service.
+   *
+   * @return The total count of projects.
+   */
     public int getProjectCount() {
         return projectCount;
     }
 
+  /**
+   * Displays the detailed information of a single project, including its basic
+   * details and a table of its associated tasks.
+   *
+   * @param project The project to display.
+   */
     public void displayProject(Project project) {
         int taskCount = project.getTaskCount();
         var tasks = project.getTasks();
@@ -97,6 +141,9 @@ public class ProjectService {
         System.out.printf("\nCompletion Rate: %.2f%%\n", project.calculateCompletionRate());
     }
 
+  /**
+   * Displays a summary table of all projects currently in the service.
+   */
     public void displayAllProjects() {
         final int ROW_WIDTH = 132;
         Util.displayTableHeader(
@@ -126,6 +173,13 @@ public class ProjectService {
                 });
     }
 
+  /**
+   * Finds a project using the project object's 'equals' method and then
+   * displays its details.
+   *
+   * @param project The project object to find and display.
+   * @throws ProjectNotFoundException if the project is not found in the list.
+   */
     public void displayProjectDetails(Project project) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
@@ -138,6 +192,15 @@ public class ProjectService {
         throw new ProjectNotFoundException("Project not found");
     }
 
+  /**
+   * Creates and adds a new {@code SoftwareProject} to the service.
+   *
+   * @param name The name of the software project.
+   * @param description The description of the software project.
+   * @param teamSize The size of the project team.
+   * @param budget The budget allocated for the software project.
+   * @throws Exception if the project list is full.
+   */
     public void addSoftwareProject(String name,
             String description,
             int teamSize,
@@ -145,6 +208,16 @@ public class ProjectService {
         addProject(new SoftwareProject(name, description, teamSize, budget));
     }
 
+  /**
+   * Creates and adds a new {@code HardwareProject} to the service.
+   *
+   * @param name The name of the hardware project.
+   * @param description The description of the hardware project.
+   * @param teamSize The size of the project team.
+   * @param budget The budget allocated for the hardware project (excluding material cost).
+   * @param materialCost The cost of materials for the hardware project.
+   * @throws Exception if the project list is full.
+   */
     public void addHardwareProject(String name,
             String description,
             int teamSize,

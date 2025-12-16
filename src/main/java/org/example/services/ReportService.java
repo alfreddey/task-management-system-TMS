@@ -3,9 +3,19 @@ package org.example.services;
 import org.example.models.Project;
 import org.example.utils.Util;
 
+/**
+ * Provides functionality for generating various reports based on project data.
+ * This class follows the Singleton pattern.
+ */
 public class ReportService {
     private static ReportService service;
 
+  /**
+   * Returns the singleton instance of the ReportService.
+   * If the instance does not exist, it creates one.
+   *
+   * @return The single instance of ReportService.
+   */
     public static ReportService getService() {
         if (service == null) {
             service = new ReportService();
@@ -14,6 +24,15 @@ public class ReportService {
         return service;
     }
 
+  /**
+   * Generates a comprehensive project progress report displaying key metrics
+   * for all managed projects, including task counts, completed tasks, and
+   * completion percentage. It also calculates and displays the average
+   * completion rate across all projects.
+   *
+   * @param projectService The {@code ProjectService} instance used to retrieve
+   * the list of projects.
+   */
     public void generateReport(ProjectService projectService) {
         final int ROW_WIDTH = 79;
         Util.displayTableHeader(
