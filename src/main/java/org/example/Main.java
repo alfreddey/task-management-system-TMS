@@ -10,19 +10,17 @@ import org.example.utils.ConsoleMenu;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
+      try (Scanner scanner = new Scanner(System.in)) {
         UserService userService = UserService.getService();
         ProjectService projectService = ProjectService.getService();
         ReportService reportService = ReportService.getService();
         TaskService taskService = TaskService.getService();
 
-        try {
-            ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService, taskService);
-            consoleMenu.start();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            scanner.close();
-        }
+        ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService, taskService);
+        consoleMenu.start();
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
     }
 }
