@@ -1,7 +1,7 @@
 package org.example.models;
 
 public class HardwareProject extends Project {
-    private double materialCost;
+    private final double materialCost;
 
     public HardwareProject(String name, String description, int teamSize, double budget, double materialCost) {
         super(name, description, teamSize, budget, ProjectType.HARDWARE);
