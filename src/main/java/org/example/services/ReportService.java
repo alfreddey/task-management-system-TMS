@@ -38,6 +38,7 @@ public class ReportService {
    */
     public void generateReport(ProjectService projectService) {
         final int ROW_WIDTH = 79;
+
         Util.displayTableHeader(
                 ROW_WIDTH,
                 "| %-10s | %-15s | %-10s | %-15s | %-15s |",

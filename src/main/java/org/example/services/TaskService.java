@@ -80,14 +80,18 @@ public class TaskService {
    * @return The {@code Task} object if found, otherwise {@code null}.
    */
     public Task getTaskByName(Project project, String taskName) {
-        var tasks = project.getTasks();
-        for (Task task : tasks) {
-            if (task.getName().equalsIgnoreCase(taskName)) {
-                return task;
-            }
-        }
-
-        return null;
+        return project.getTasks().stream()
+                .filter((task) -> task.getName().equalsIgnoreCase(taskName))
+                .findAny()
+                .orElse(null);
+//        var tasks = project.getTasks();
+//        for (Task task : tasks) {
+//            if (task.getName().equalsIgnoreCase(taskName)) {
+//                return task;
+//            }
+//        }
+//
+//        return null;
     }
 
     /**
@@ -152,6 +156,7 @@ public class TaskService {
 //
 //      return taskTarget;
         List<Task> tasks = project.getTasks();
+
         Task taskTarget =
                 tasks.stream()
                         .filter((task) -> task.getId().equalsIgnoreCase(taskId))
@@ -159,6 +164,7 @@ public class TaskService {
                         .orElseThrow(() -> new TaskNotFoundException("Task to be removed not found"));
 
         tasks.remove(taskTarget);
+
         return taskTarget;
     }
 
