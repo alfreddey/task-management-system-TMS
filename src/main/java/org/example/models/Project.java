@@ -1,17 +1,17 @@
 package org.example.models;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Project {
     private static final int MAX_TASKS = 999;
     private static int index = 0;
     private final int teamSize;
-    private int taskCount;
     private final double budget;
     protected String id;
     protected String name;
     protected String description;
-    private final Task[] tasks;
+    private final List<Task> tasks;
     private final ProjectType type;
 
     public Project(String name, String description, int teamSize, double budget, ProjectType type) {
@@ -21,16 +21,13 @@ public abstract class Project {
         this.description = description;
         this.budget = budget;
         this.teamSize = teamSize;
-        this.taskCount = 0;
-        this.tasks = new Task[MAX_TASKS];
+        this.tasks = new ArrayList<>();
         this.type = type;
     }
 
-    public Task[] getTasks() {
-        return Arrays.copyOf(tasks, taskCount);
+    public List<Task> getTasks() {
+        return tasks;
     }
-
-    public Task[] getTaskArray() { return tasks; }
 
     public String getId() {
         return id;
@@ -41,7 +38,7 @@ public abstract class Project {
     }
 
     public int getTaskCount() {
-        return taskCount;
+        return tasks.size();
     }
 
     public String getDescription() {
@@ -59,10 +56,4 @@ public abstract class Project {
     public ProjectType getType() {
         return type;
     }
-
-    public void setTaskCount(int taskCount) {
-        this.taskCount = taskCount;
-    }
-
-    public int getMaxTasks() { return MAX_TASKS; }
 }

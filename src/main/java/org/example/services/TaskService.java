@@ -5,6 +5,9 @@ import org.example.models.Task;
 import org.example.models.TaskStatus;
 import org.example.utils.exceptions.TaskNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Provides a set of services for managing tasks within projects, including
  * creation, status updates, and association with projects. This class
@@ -56,16 +59,17 @@ public class TaskService {
    * @param task The task to be added.
    */
     public void addTaskToProject(Project project, Task task) {
-        Task[] tasks = project.getTaskArray();
-        int taskCount = project.getTaskCount();
-        int MAX_TASKS = project.getMaxTasks();
-        if (taskCount >= MAX_TASKS - 1) {
-            System.out.println("Task array is full");
-            return;
-        }
-
-        tasks[taskCount] = task;
-        project.setTaskCount(taskCount + 1);
+//        Task[] tasks = project.getTaskArray();
+//        int taskCount = project.getTaskCount();
+//        int MAX_TASKS = project.getMaxTasks();
+//        if (taskCount >= MAX_TASKS - 1) {
+//            System.out.println("Task array is full");
+//            return;
+//        }
+//
+//        tasks[taskCount] = task;
+//        project.setTaskCount(taskCount + 1);
+        project.getTasks().add(task);
     }
 
   /**
@@ -98,15 +102,19 @@ public class TaskService {
      * @throws TaskNotFoundException if no task with the specified ID exists in the project
      */
     public Task getTaskById(Project project, String id) throws TaskNotFoundException {
-        int taskCount = project.getTaskCount();
-        Task[] tasks = project.getTasks();
-        for (int i = 0; i < taskCount; i++) {
-            if (tasks[i].getId().equalsIgnoreCase(id)) {
-                return tasks[i];
-            }
-        }
-
-        throw new TaskNotFoundException("Task not found");
+//        int taskCount = project.getTaskCount();
+//        Task[] tasks = project.getTasks();
+//        for (int i = 0; i < taskCount; i++) {
+//            if (tasks[i].getId().equalsIgnoreCase(id)) {
+//                return tasks[i];
+//            }
+//        }
+//
+//        throw new TaskNotFoundException("Task not found");
+        return project.getTasks().stream()
+                .filter((task) -> task.getId().equalsIgnoreCase(id))
+                .findFirst()
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
     }
 
   /**
@@ -118,31 +126,40 @@ public class TaskService {
    * @throws TaskNotFoundException if no task with the given ID is found in the project.
    */
     public Task removeTaskById(Project project, String taskId) throws TaskNotFoundException {
-      final int MAX_TASKS = project.getMaxTasks();
-      final int taskCount = project.getTaskCount();
-      Task[] tasks = project.getTaskArray();
-      Task[] newArray = new Task[MAX_TASKS];
+//      final int MAX_TASKS = project.getMaxTasks();
+//      final int taskCount = project.getTaskCount();
+//      Task[] tasks = project.getTaskArray();
+//      Task[] newArray = new Task[MAX_TASKS];
+//
+//      Task taskTarget = null;
+//      int index = 0;
+//      for (int i = 0; i < taskCount; i++) {
+//        Task task = tasks[i];
+//
+//        if (!task.getId().equalsIgnoreCase(taskId)) {
+//          newArray[index++] = task;
+//        } else {
+//          taskTarget = task;
+//        }
+//      }
+//
+//      if (taskTarget == null) {
+//        throw new TaskNotFoundException("Task to be removed not found");
+//      }
+//
+//      project.setTaskCount(taskCount - 1);
+//      System.arraycopy(newArray, 0, tasks, 0, taskCount);
+//
+//      return taskTarget;
+        List<Task> tasks = project.getTasks();
+        Task taskTarget =
+                tasks.stream()
+                        .filter((task) -> task.getId().equalsIgnoreCase(taskId))
+                        .findFirst()
+                        .orElseThrow(() -> new TaskNotFoundException("Task to be removed not found"));
 
-      Task taskTarget = null;
-      int index = 0;
-      for (int i = 0; i < taskCount; i++) {
-        Task task = tasks[i];
-
-        if (!task.getId().equalsIgnoreCase(taskId)) {
-          newArray[index++] = task;
-        } else {
-          taskTarget = task;
-        }
-      }
-
-      if (taskTarget == null) {
-        throw new TaskNotFoundException("Task to be removed not found");
-      }
-
-      project.setTaskCount(taskCount - 1);
-      System.arraycopy(newArray, 0, tasks, 0, taskCount);
-
-      return taskTarget;
+        tasks.remove(taskTarget);
+        return taskTarget;
     }
 
     /**
@@ -155,15 +172,22 @@ public class TaskService {
      * @return the percentage of completed tasks, ranging from 0.0 to 100.0
      */
     public double calculateCompletionRate(Project project) {
-        int taskCount = project.getTaskCount();
-        Task[] tasks = project.getTasks();
-        double count = 0;
-        for (int i = 0; i < taskCount; i++) {
-            if (tasks[i].isCompleted()) {
-                count++;
-            }
-        }
+//        int taskCount = project.getTaskCount();
+//        Task[] tasks = project.getTasks();
+//        double count = 0;
+//        for (int i = 0; i < taskCount; i++) {
+//            if (tasks[i].isCompleted()) {
+//                count++;
+//            }
+//        }
+//
+//        return (taskCount > 0) ? (count / taskCount) * 100 : 0;
+        List<Task> tasks = project.getTasks();
 
-        return (taskCount > 0) ? (count / taskCount) * 100 : 0;
+        double completedTaskCount = (double) tasks.stream()
+                .filter(Task::isCompleted)
+                .count();
+
+        return !tasks.isEmpty() ? completedTaskCount / tasks.size() * 100 : 0;
     }
 }
