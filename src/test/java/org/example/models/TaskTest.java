@@ -1,6 +1,7 @@
 package org.example.models;
 
 import org.example.services.ProjectService;
+import org.example.services.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,12 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
     ProjectService projectService;
+    TaskService taskService;
     Project softwareProject;
     Task task;
 
     @BeforeEach
     void setUp() {
         projectService = ProjectService.getService();
+        taskService = TaskService.getService();
 
         softwareProject = new SoftwareProject("Software PR", "description", 12, 34.4);
 
@@ -23,7 +26,7 @@ class TaskTest {
                 "P001"
         );
 
-        softwareProject.addTask(task);
+        taskService.addTaskToProject(softwareProject, task);
     }
 
     @Test

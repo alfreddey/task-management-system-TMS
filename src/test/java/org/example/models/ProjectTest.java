@@ -1,6 +1,7 @@
 package org.example.models;
 
 import org.example.services.ProjectService;
+import org.example.services.TaskService;
 import org.example.utils.exceptions.InvalidTaskIDException;
 import org.example.utils.exceptions.TaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProjectTest {
     ProjectService projectService;
+    TaskService taskService;
     Project softwareProject;
     Project hardwareProject;
 
@@ -18,11 +20,13 @@ class ProjectTest {
     @BeforeEach
     void setUp() {
         projectService = ProjectService.getService();
+        taskService = TaskService.getService();
 
         softwareProject = new SoftwareProject("Software PR", "description", 12, 34.4);
         hardwareProject = new HardwareProject("Hardware PR", "desc", 34, 09.23, 23);
 
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "Task Name 1",
                         TaskStatus.COMPLETED,
@@ -33,13 +37,13 @@ class ProjectTest {
     @DisplayName("Test for task addition")
     @Test
     void testAddTask() throws Exception {
-        assertEquals("T001", softwareProject.getTaskById("T001").getId());
+        assertEquals("T001", taskService.getTaskById(softwareProject, "T001").getId());
     }
 
     @Test
     void testTaskNotFoundException() {
         Exception caughtException = assertThrows(TaskNotFoundException.class, () -> {
-            softwareProject.getTaskById("T990");
+            taskService.getTaskById(softwareProject, "T990");
         });
 
         assertEquals("Task not found", caughtException.getMessage());
@@ -47,13 +51,15 @@ class ProjectTest {
 
     @Test
     void testGetCompletionRate() {
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
                         "P001"));
 
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.PENDING,
@@ -61,7 +67,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.calculateCompletionRate();
+        var completionRate = taskService.calculateCompletionRate(softwareProject);
         assertEquals(100 * (2 / 3.0), completionRate);
     }
 
@@ -69,7 +75,8 @@ class ProjectTest {
     @Test
     void testGetCompletionRateOneInProgressCase() {
         // Add two more tasks to softwareProject
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
@@ -77,7 +84,8 @@ class ProjectTest {
                 )
         );
 
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.IN_PROGRESS,
@@ -85,7 +93,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.calculateCompletionRate();
+        var completionRate = taskService.calculateCompletionRate(softwareProject);
         assertEquals(100 * (2 / 3.0), completionRate);
     }
 
@@ -93,7 +101,8 @@ class ProjectTest {
     @Test
     void testGetCompletionRateAllCompletedCase() {
         // Add two more tasks to softwareProject
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
@@ -101,7 +110,8 @@ class ProjectTest {
                 )
         );
 
-        softwareProject.addTask(
+        taskService.addTaskToProject(
+                softwareProject,
                 new Task(
                         "adf",
                         TaskStatus.COMPLETED,
@@ -109,7 +119,7 @@ class ProjectTest {
                 )
         );
 
-        var completionRate = softwareProject.calculateCompletionRate();
+        var completionRate = taskService.calculateCompletionRate(softwareProject);
         assertEquals(100, completionRate);
     }
 
@@ -121,14 +131,14 @@ class ProjectTest {
                 "P001"
         );
 
-        softwareProject.addTask(task);
+        taskService.addTaskToProject(softwareProject, task);
 
         String taskId = task.getId();
-        softwareProject.removeTaskById(taskId);
+        taskService.removeTaskById(softwareProject, taskId);
 
         // Check if truly removed
         Exception caughtException = assertThrows(TaskNotFoundException.class, () -> {
-            softwareProject.getTaskById(taskId);
+            taskService.getTaskById(softwareProject, taskId);
         });
 
         assertEquals("Task not found", caughtException.getMessage());

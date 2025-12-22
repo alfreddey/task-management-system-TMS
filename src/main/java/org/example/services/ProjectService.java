@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 import org.example.models.HardwareProject;
 import org.example.models.Project;
 import org.example.models.SoftwareProject;
+import org.example.models.Task;
 import org.example.utils.Util;
 import org.example.utils.exceptions.ProjectNotFoundException;
 
@@ -17,6 +18,7 @@ import org.example.utils.exceptions.ProjectNotFoundException;
 public class ProjectService {
     private final int MAX_PROJECTS = 999;
     private static ProjectService service;
+    private static TaskService taskService;
     private final Project[] projects;
     private int projectCount;
 
@@ -38,6 +40,7 @@ public class ProjectService {
     public static ProjectService getService() {
         if (service == null) {
             service = new ProjectService();
+            taskService = TaskService.getService();
         }
 
         return service;
@@ -138,7 +141,7 @@ public class ProjectService {
                     });
         }
 
-        System.out.printf("\nCompletion Rate: %.2f%%\n", project.calculateCompletionRate());
+        System.out.printf("\nCompletion Rate: %.2f%%\n", taskService.calculateCompletionRate(project));
     }
 
   /**
@@ -183,7 +186,6 @@ public class ProjectService {
     public void displayProjectDetails(Project project) throws ProjectNotFoundException {
         for (int i = 0; i < projectCount; i++) {
             if (projects[i].equals(project)) {
-//                projects[i].displayProject();
                 displayProject(projects[i]);
                 return;
             }

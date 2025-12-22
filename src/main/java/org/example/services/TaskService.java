@@ -56,7 +56,16 @@ public class TaskService {
    * @param task The task to be added.
    */
     public void addTaskToProject(Project project, Task task) {
-        project.addTask(task);
+        Task[] tasks = project.getTaskArray();
+        int taskCount = project.getTaskCount();
+        int MAX_TASKS = project.getMaxTasks();
+        if (taskCount >= MAX_TASKS - 1) {
+            System.out.println("Task array is full");
+            return;
+        }
+
+        tasks[taskCount] = task;
+        project.setTaskCount(taskCount + 1);
     }
 
   /**
@@ -77,6 +86,29 @@ public class TaskService {
         return null;
     }
 
+    /**
+     * Searches for a specific task within a project using its unique identifier.
+     * <p>
+     * The search is case-insensitive. This method iterates through the underlying
+     * array of tasks associated with the project.
+     *
+     * @param project the project containing the tasks to be searched
+     * @param id      the unique identifier of the task to retrieve
+     * @return the {@code Task} matching the provided ID
+     * @throws TaskNotFoundException if no task with the specified ID exists in the project
+     */
+    public Task getTaskById(Project project, String id) throws TaskNotFoundException {
+        int taskCount = project.getTaskCount();
+        Task[] tasks = project.getTasks();
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i].getId().equalsIgnoreCase(id)) {
+                return tasks[i];
+            }
+        }
+
+        throw new TaskNotFoundException("Task not found");
+    }
+
   /**
    * Removes a task from a project using the task's ID.
    *
@@ -86,6 +118,52 @@ public class TaskService {
    * @throws TaskNotFoundException if no task with the given ID is found in the project.
    */
     public Task removeTaskById(Project project, String taskId) throws TaskNotFoundException {
-        return project.removeTaskById(taskId);
+      final int MAX_TASKS = project.getMaxTasks();
+      final int taskCount = project.getTaskCount();
+      Task[] tasks = project.getTaskArray();
+      Task[] newArray = new Task[MAX_TASKS];
+
+      Task taskTarget = null;
+      int index = 0;
+      for (int i = 0; i < taskCount; i++) {
+        Task task = tasks[i];
+
+        if (!task.getId().equalsIgnoreCase(taskId)) {
+          newArray[index++] = task;
+        } else {
+          taskTarget = task;
+        }
+      }
+
+      if (taskTarget == null) {
+        throw new TaskNotFoundException("Task to be removed not found");
+      }
+
+      project.setTaskCount(taskCount - 1);
+      System.arraycopy(newArray, 0, tasks, 0, taskCount);
+
+      return taskTarget;
+    }
+
+    /**
+     * Calculates the completion percentage of a project based on the status of its tasks.
+     * <p>
+     * The rate is determined by the ratio of completed tasks to the total number of tasks.
+     * If the project contains no tasks, the completion rate is returned as 0.0.
+     *
+     * @param project the project for which to calculate the completion rate
+     * @return the percentage of completed tasks, ranging from 0.0 to 100.0
+     */
+    public double calculateCompletionRate(Project project) {
+        int taskCount = project.getTaskCount();
+        Task[] tasks = project.getTasks();
+        double count = 0;
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i].isCompleted()) {
+                count++;
+            }
+        }
+
+        return (taskCount > 0) ? (count / taskCount) * 100 : 0;
     }
 }

@@ -37,5 +37,4 @@ public class Task implements Completable {
     public boolean isCompleted() {
         return this.status == TaskStatus.COMPLETED;
     }
-
 }

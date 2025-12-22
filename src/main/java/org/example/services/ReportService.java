@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.models.Project;
 import org.example.utils.Util;
+import org.example.services.TaskService;
 
 /**
  * Provides functionality for generating various reports based on project data.
@@ -9,6 +10,7 @@ import org.example.utils.Util;
  */
 public class ReportService {
     private static ReportService service;
+    private static TaskService taskService;
 
   /**
    * Returns the singleton instance of the ReportService.
@@ -19,6 +21,7 @@ public class ReportService {
     public static ReportService getService() {
         if (service == null) {
             service = new ReportService();
+            taskService = TaskService.getService();
         }
 
         return service;
@@ -51,7 +54,7 @@ public class ReportService {
             var project = projects[i];
 
             var taskCount = project.getTaskCount();
-            double completionRate = Math.round(project.calculateCompletionRate());
+            double completionRate = Math.round(taskService.calculateCompletionRate(project));
 
             var completedTaskCount = Math.round(((float) completionRate / 100) * taskCount);
 

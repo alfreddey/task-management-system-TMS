@@ -656,7 +656,7 @@ public class ConsoleMenu {
                 ValidationUtils.validateProjectID(input);
 
                 Project project = projectService.getProjectById(input);
-                task = project.getTaskById(taskId);
+                task = taskService.getTaskById(project, taskId);
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage() + ". " + "Please try again");
