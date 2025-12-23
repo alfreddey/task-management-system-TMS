@@ -17,6 +17,7 @@ import org.example.services.ProjectService;
 import org.example.services.ReportService;
 import org.example.services.TaskService;
 import org.example.services.UserService;
+import org.example.utils.exceptions.UserNotFoundException;
 
 public class ConsoleMenu {
     private final UserService userService;
@@ -84,6 +85,8 @@ public class ConsoleMenu {
                     return;
                 }
 
+                ValidationUtils.validateEmail(input);
+
                 user = userService.getUserByEmail(input);
 
                 Util.displayText(
@@ -106,17 +109,32 @@ public class ConsoleMenu {
     }
 
     private void registerUser() {
+        String email = null;
         String input;
         String name;
-        String email;
 
         Util.displayAsHeading("Registration portal");
 
         Util.displayAsPrompt("Welcome, enter your name here");
         name = scanner.nextLine();
 
-        Util.displayAsPrompt("\nEnter your email");
-        email = scanner.nextLine();
+        boolean running = true;
+        do {
+            try {
+                Util.displayAsPrompt("\nEnter your email");
+                email = scanner.nextLine();
+
+                ValidationUtils.validateEmail(email);
+
+                if (userService.emailExists(email)) {
+                    throw new Exception("User already exists. Enter another email");
+                }
+
+                running = false;
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (running);
 
         boolean valid = true;
         do {

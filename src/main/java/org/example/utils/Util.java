@@ -64,7 +64,7 @@ public class Util {
      * Populates the app's user and project list
      */
     public static void seedDatabase(ProjectService projectService, UserService userService) throws Exception {
-        userService.addAdminUser("alfred", "a");
+        userService.addAdminUser("alfred", "al@gmail.com");
 
         userService.addRegularUser("scar", "r");
 
