@@ -1,6 +1,6 @@
 package org.example.services;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import org.example.models.HardwareProject;
@@ -16,10 +16,9 @@ import org.example.utils.exceptions.ProjectNotFoundException;
  * only one instance of the service exists.
  */
 public class ProjectService {
-    private final int MAX_PROJECTS = 999;
     private static ProjectService service;
     private static TaskService taskService;
-    private final Project[] projects;
+    private final Map<String, Project> projects;
     private int projectCount;
 
     /**
@@ -28,7 +27,7 @@ public class ProjectService {
      */
     private ProjectService() {
         this.projectCount = 0;
-        this.projects = new Project[MAX_PROJECTS];
+        this.projects = new HashMap<>();
     }
 
     /**
@@ -50,15 +49,9 @@ public class ProjectService {
      * Adds a new project to the service's project list.
      *
      * @param project The project to add.
-     * @throws Exception if the project list is full (reaches MAX_PROJECTS).
      */
-    public void addProject(Project project) throws Exception {
-        if (projectCount < MAX_PROJECTS) {
-            projects[projectCount++] = project;
-            return;
-        }
-
-        throw new Exception("Project list is full");
+    public void addProject(Project project) {
+        projects.putIfAbsent(project.getId(), project);
     }
 
     /**
@@ -69,13 +62,18 @@ public class ProjectService {
      * @throws ProjectNotFoundException if no project with the given ID is found.
      */
     public Project getProjectById(String id) throws ProjectNotFoundException {
-        for (int i = 0; i < projectCount; i++) {
-            if (projects[i].getId().equalsIgnoreCase(id)) {
-                return projects[i];
-            }
-        }
-
-        throw new ProjectNotFoundException("Project not found");
+        return projects.values()
+                .stream()
+                .filter((project) -> project.getId().equalsIgnoreCase(id))
+                .findAny()
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+//        for (int i = 0; i < projectCount; i++) {
+//            if (projects[i].getId().equalsIgnoreCase(id)) {
+//                return projects[i];
+//            }
+//        }
+//
+//        throw new ProjectNotFoundException("Project not found");
     }
 
     /**
@@ -83,8 +81,9 @@ public class ProjectService {
      *
      * @return A copy of the array of all current projects.
      */
-    public Project[] getAllProjects() {
-        return Arrays.copyOf(projects, projectCount);
+    public Map<String, Project> getAllProjects() {
+        return projects;
+//        return Arrays.copyOf(projects, projectCount);
     }
 
     /**
@@ -93,7 +92,7 @@ public class ProjectService {
      * @return The total count of projects.
      */
     public int getProjectCount() {
-        return projectCount;
+        return projects.size();
     }
 
     /**
@@ -104,7 +103,8 @@ public class ProjectService {
      */
     public void displayProject(Project project) {
         Util.displayText(
-                String.format("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
+                String.format(
+                        "Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
                         project.getName(),
                         project.getType(),
                         project.getTeamSize(),
@@ -191,21 +191,31 @@ public class ProjectService {
                 "BUDGET",
                 "DESCRIPTION");
 
-        IntStream
-                .range(0, projectCount)
-                .forEach(i -> {
-                    var project = projects[i];
-
-                    Util.displayTableRow(
-                            ROW_WIDTH,
-                            "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                            project.getId(),
-                            project.getName(),
-                            project.getType(),
-                            project.getTeamSize(),
-                            project.getBudget(),
-                            project.getDescription());
-                });
+        projects.forEach((projectId, project) -> Util.displayTableRow(
+                ROW_WIDTH,
+                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                project.getId(),
+                project.getName(),
+                project.getType(),
+                project.getTeamSize(),
+                project.getBudget(),
+                project.getDescription()));
+//
+//        IntStream
+//                .range(0, projectCount)
+//                .forEach(i -> {
+//                    var project = projects[i];
+//
+//                    Util.displayTableRow(
+//                            ROW_WIDTH,
+//                            "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+//                            project.getId(),
+//                            project.getName(),
+//                            project.getType(),
+//                            project.getTeamSize(),
+//                            project.getBudget(),
+//                            project.getDescription());
+//                });
     }
 
     /**
@@ -216,14 +226,18 @@ public class ProjectService {
      * @throws ProjectNotFoundException if the project is not found in the list.
      */
     public void displayProjectDetails(Project project) throws ProjectNotFoundException {
-        for (int i = 0; i < projectCount; i++) {
-            if (projects[i].equals(project)) {
-                displayProject(projects[i]);
-                return;
-            }
-        }
+        var targetProject = getProjectById(project.getId());
 
-        throw new ProjectNotFoundException("Project not found");
+        displayProject(targetProject);
+
+//        for (int i = 0; i < projectCount; i++) {
+//            if (projects[i].equals(project)) {
+//                displayProject(projects[i]);
+//                return;
+//            }
+//        }
+//
+//        throw new ProjectNotFoundException("Project not found");
     }
 
     /**

@@ -12,12 +12,12 @@ public class ReportService {
     private static ReportService service;
     private static TaskService taskService;
 
-  /**
-   * Returns the singleton instance of the ReportService.
-   * If the instance does not exist, it creates one.
-   *
-   * @return The single instance of ReportService.
-   */
+    /**
+     * Returns the singleton instance of the ReportService.
+     * If the instance does not exist, it creates one.
+     *
+     * @return The single instance of ReportService.
+     */
     public static ReportService getService() {
         if (service == null) {
             service = new ReportService();
@@ -27,15 +27,15 @@ public class ReportService {
         return service;
     }
 
-  /**
-   * Generates a comprehensive project progress report displaying key metrics
-   * for all managed projects, including task counts, completed tasks, and
-   * completion percentage. It also calculates and displays the average
-   * completion rate across all projects.
-   *
-   * @param projectService The {@code ProjectService} instance used to retrieve
-   * the list of projects.
-   */
+    /**
+     * Generates a comprehensive project progress report displaying key metrics
+     * for all managed projects, including task counts, completed tasks, and
+     * completion percentage. It also calculates and displays the average
+     * completion rate across all projects.
+     *
+     * @param projectService The {@code ProjectService} instance used to retrieve
+     *                       the list of projects.
+     */
     public void generateReport(ProjectService projectService) {
         final int ROW_WIDTH = 79;
 
@@ -48,18 +48,15 @@ public class ReportService {
                 "COMPLETED",
                 "PROGRESS (%)");
 
-        Project[] projects = projectService.getAllProjects();
-        double sum = 0; // Sum of completion rate;
-        var projectCount = projectService.getProjectCount();
-        for (int i = 0; i < projectCount; i++) {
-            var project = projects[i];
-
+        var projects = projectService.getAllProjects();
+        final double[] sum = {0};
+        projects.forEach((projectId,project) -> {
             var taskCount = project.getTaskCount();
             double completionRate = Math.round(taskService.calculateCompletionRate(project));
 
             var completedTaskCount = Math.round(((float) completionRate / 100) * taskCount);
 
-            sum += completionRate;
+            sum[0] += completionRate;
 
             Util.displayTableRow(
                     ROW_WIDTH,
@@ -69,12 +66,40 @@ public class ReportService {
                     taskCount,
                     completedTaskCount,
                     completionRate);
-        }
+        });
 
-        var avgCompletionRate = sum / projectCount;
+        var avgCompletionRate = sum[0] / projects.size();
         Util.displayText(
                 String.format(
                         "\nAVERAGE COMPLETION: %.2f%%\n",
                         avgCompletionRate));
+//
+//        double sum = 0; // Sum of completion rate;
+//        var projectCount = projectService.getProjectCount();
+//        for (int i = 0; i < projectCount; i++) {
+//            var project = projects[i];
+//
+//            var taskCount = project.getTaskCount();
+//            double completionRate = Math.round(taskService.calculateCompletionRate(project));
+//
+//            var completedTaskCount = Math.round(((float) completionRate / 100) * taskCount);
+//
+//            sum += completionRate;
+//
+//            Util.displayTableRow(
+//                    ROW_WIDTH,
+//                    "| %-10s | %-15s | %-10s | %-15s | %-15s |",
+//                    project.getId(),
+//                    project.getName(),
+//                    taskCount,
+//                    completedTaskCount,
+//                    completionRate);
+//        }
+//
+//        var avgCompletionRate = sum / projectCount;
+//        Util.displayText(
+//                String.format(
+//                        "\nAVERAGE COMPLETION: %.2f%%\n",
+//                        avgCompletionRate));
     }
 }

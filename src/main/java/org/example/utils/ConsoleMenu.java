@@ -2,6 +2,7 @@ package org.example.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.example.models.HardwareProject;
@@ -350,7 +351,7 @@ public class ConsoleMenu {
             }
         } while (maximumBudgetRange <= 0);
 
-        Project[] projects = projectService.getAllProjects();
+        var projects = projectService.getAllProjects();
 
         final int ROW_WIDTH = 132;
         Util.displayTableHeader(
@@ -363,7 +364,7 @@ public class ConsoleMenu {
                 "BUDGET",
                 "DESCRIPTION");
 
-        for (Project project : projects) {
+        for (Project project : projects.values()) {
             if (project.getBudget() >= minimumBudgetRange
                     && project.getBudget() <= maximumBudgetRange) {
                 Util.displayTableRow(
@@ -380,7 +381,7 @@ public class ConsoleMenu {
     }
 
     private void viewProjectByType(ProjectType type) {
-        Project[] projects = projectService.getAllProjects();
+        var projects = projectService.getAllProjects();
 
         final int ROW_WIDTH = 132;
         Util.displayTableHeader(
@@ -393,9 +394,9 @@ public class ConsoleMenu {
                 "BUDGET",
                 "DESCRIPTION");
 
-        Arrays
-                .stream(projects)
-                .filter(project -> project.getType() == type)
+        projects.values()
+                .stream()
+                .filter((project) -> project.getType() == type)
                 .forEach(project -> Util.displayTableRow(
                         ROW_WIDTH,
                         "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
