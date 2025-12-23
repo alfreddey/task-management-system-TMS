@@ -1,8 +1,6 @@
 package org.example.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Scanner;
 
 import org.example.models.HardwareProject;
@@ -17,7 +15,6 @@ import org.example.services.ProjectService;
 import org.example.services.ReportService;
 import org.example.services.TaskService;
 import org.example.services.UserService;
-import org.example.utils.exceptions.UserNotFoundException;
 
 public class ConsoleMenu {
     private final UserService userService;

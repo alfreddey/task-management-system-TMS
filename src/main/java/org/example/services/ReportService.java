@@ -1,8 +1,6 @@
 package org.example.services;
 
-import org.example.models.Project;
 import org.example.utils.Util;
-import org.example.services.TaskService;
 
 /**
  * Provides functionality for generating various reports based on project data.
@@ -73,33 +71,5 @@ public class ReportService {
                 String.format(
                         "\nAVERAGE COMPLETION: %.2f%%\n",
                         avgCompletionRate));
-//
-//        double sum = 0; // Sum of completion rate;
-//        var projectCount = projectService.getProjectCount();
-//        for (int i = 0; i < projectCount; i++) {
-//            var project = projects[i];
-//
-//            var taskCount = project.getTaskCount();
-//            double completionRate = Math.round(taskService.calculateCompletionRate(project));
-//
-//            var completedTaskCount = Math.round(((float) completionRate / 100) * taskCount);
-//
-//            sum += completionRate;
-//
-//            Util.displayTableRow(
-//                    ROW_WIDTH,
-//                    "| %-10s | %-15s | %-10s | %-15s | %-15s |",
-//                    project.getId(),
-//                    project.getName(),
-//                    taskCount,
-//                    completedTaskCount,
-//                    completionRate);
-//        }
-//
-//        var avgCompletionRate = sum / projectCount;
-//        Util.displayText(
-//                String.format(
-//                        "\nAVERAGE COMPLETION: %.2f%%\n",
-//                        avgCompletionRate));
     }
 }

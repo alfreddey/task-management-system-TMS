@@ -1,12 +1,10 @@
 package org.example.services;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 import org.example.models.HardwareProject;
 import org.example.models.Project;
 import org.example.models.SoftwareProject;
-import org.example.models.Task;
 import org.example.utils.Util;
 import org.example.utils.exceptions.ProjectNotFoundException;
 
@@ -19,14 +17,12 @@ public class ProjectService {
     private static ProjectService service;
     private static TaskService taskService;
     private final Map<String, Project> projects;
-    private int projectCount;
 
     /**
      * Private constructor to prevent direct instantiation, enforcing the Singleton pattern.
      * Initializes the project array and sets the initial project count to zero.
      */
     private ProjectService() {
-        this.projectCount = 0;
         this.projects = new HashMap<>();
     }
 
@@ -67,13 +63,6 @@ public class ProjectService {
                 .filter((project) -> project.getId().equalsIgnoreCase(id))
                 .findAny()
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-//        for (int i = 0; i < projectCount; i++) {
-//            if (projects[i].getId().equalsIgnoreCase(id)) {
-//                return projects[i];
-//            }
-//        }
-//
-//        throw new ProjectNotFoundException("Project not found");
     }
 
     /**
@@ -122,58 +111,17 @@ public class ProjectService {
                     "TASK NAME",
                     "STATUS");
 
-            project.getTasks().forEach((task) -> {
-                Util.displayTableRow(
-                        ROW_WIDTH,
-                        "| %-4s | %-20s | %-20s |",
-                        task.getId(),
-                        task.getName(),
-                        task.getStatus());
-            });
+            project.getTasks().forEach((task) -> Util.displayTableRow(
+                    ROW_WIDTH,
+                    "| %-4s | %-20s | %-20s |",
+                    task.getId(),
+                    task.getName(),
+                    task.getStatus()));
 
             System.out.printf("\nCompletion Rate: %.2f%%\n", taskService.calculateCompletionRate(project));
         } else {
             Util.displayText("No task added yet. Added tasks will display here.");
         }
-//        int taskCount = project.getTaskCount();
-//        var tasks = project.getTasks();
-//
-//        Util.displayText(
-//                String.format("Project Name: %s\nType: %s\nTeam Size: %d\nBudget: $%.2f\n",
-//                        project.getName(),
-//                        project.getType(),
-//                        project.getTeamSize(),
-//                        project.getBudget()));
-//
-//        Util.displayText("Associated Tasks:");
-//
-//        if (taskCount <= 0) {
-//            Util.displayText("No task added yet. Added tasks will display here.");
-//        } else {
-//            final int ROW_WIDTH = 52;
-//
-//            Util.displayTableHeader(
-//                    ROW_WIDTH,
-//                    "| %-4s | %-20s | %-20s |",
-//                    "ID",
-//                    "TASK NAME",
-//                    "STATUS");
-//
-//            IntStream
-//                    .range(0, taskCount)
-//                    .forEach(i -> {
-//                        var task = tasks[i];
-//
-//                        Util.displayTableRow(
-//                                ROW_WIDTH,
-//                                "| %-4s | %-20s | %-20s |",
-//                                task.getId(),
-//                                task.getName(),
-//                                task.getStatus());
-//                    });
-//        }
-//
-//        System.out.printf("\nCompletion Rate: %.2f%%\n", taskService.calculateCompletionRate(project));
     }
 
     /**
@@ -200,22 +148,6 @@ public class ProjectService {
                 project.getTeamSize(),
                 project.getBudget(),
                 project.getDescription()));
-//
-//        IntStream
-//                .range(0, projectCount)
-//                .forEach(i -> {
-//                    var project = projects[i];
-//
-//                    Util.displayTableRow(
-//                            ROW_WIDTH,
-//                            "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-//                            project.getId(),
-//                            project.getName(),
-//                            project.getType(),
-//                            project.getTeamSize(),
-//                            project.getBudget(),
-//                            project.getDescription());
-//                });
     }
 
     /**
@@ -229,15 +161,6 @@ public class ProjectService {
         var targetProject = getProjectById(project.getId());
 
         displayProject(targetProject);
-
-//        for (int i = 0; i < projectCount; i++) {
-//            if (projects[i].equals(project)) {
-//                displayProject(projects[i]);
-//                return;
-//            }
-//        }
-//
-//        throw new ProjectNotFoundException("Project not found");
     }
 
     /**
@@ -247,12 +170,11 @@ public class ProjectService {
      * @param description The description of the software project.
      * @param teamSize    The size of the project team.
      * @param budget      The budget allocated for the software project.
-     * @throws Exception if the project list is full.
      */
     public void addSoftwareProject(String name,
                                    String description,
                                    int teamSize,
-                                   double budget) throws Exception {
+                                   double budget) {
         addProject(new SoftwareProject(name, description, teamSize, budget));
     }
 
@@ -264,13 +186,12 @@ public class ProjectService {
      * @param teamSize     The size of the project team.
      * @param budget       The budget allocated for the hardware project (excluding material cost).
      * @param materialCost The cost of materials for the hardware project.
-     * @throws Exception if the project list is full.
      */
     public void addHardwareProject(String name,
                                    String description,
                                    int teamSize,
                                    double budget,
-                                   double materialCost) throws Exception {
+                                   double materialCost) {
         addProject(new HardwareProject(name, description, teamSize, budget, materialCost));
     }
 }

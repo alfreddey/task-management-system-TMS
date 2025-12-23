@@ -3,7 +3,6 @@ package org.example.services;
 import org.example.models.AdminUser;
 import org.example.models.RegularUser;
 import org.example.models.User;
-import org.example.utils.ValidationUtils;
 import org.example.utils.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -87,14 +86,6 @@ public class UserService {
                 .filter((user) -> user.getEmail().equalsIgnoreCase(email))
                 .findAny()
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-//        for (int i = 0; i < userCount; i++) {
-//            User user = users[i];
-//            if (user.getEmail().equals(email)) {
-//                return user;
-//            }
-//        }
-//
-//        throw new UserNotFoundException("User not found");
     }
 
     public boolean emailExists(String email) {
