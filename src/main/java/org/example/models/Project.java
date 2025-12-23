@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Project {
-    private static final int MAX_TASKS = 999;
     private static int index = 0;
     private final int teamSize;
     private final double budget;
