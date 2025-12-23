@@ -16,7 +16,7 @@ public class ValidationUtils {
     }
 
     public static void validateProjectID(String projectID) throws InvalidProjectIDException {
-        var pattern = Pattern.compile("P\\d{3}", Pattern.CASE_INSENSITIVE);
+        var pattern = Pattern.compile("^P\\d{3}\\b", Pattern.CASE_INSENSITIVE);
         var matcher = pattern.matcher(projectID);
 
         if (!matcher.find()) {
@@ -25,7 +25,7 @@ public class ValidationUtils {
     }
 
     public static void validateTaskID(String taskID) throws InvalidTaskIDException {
-        var pattern = Pattern.compile("T\\d{3}", Pattern.CASE_INSENSITIVE);
+        var pattern = Pattern.compile("^T\\d{3}\\b", Pattern.CASE_INSENSITIVE);
         var matcher = pattern.matcher(taskID);
 
         if (!matcher.find()) {
