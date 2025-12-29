@@ -12,10 +12,13 @@ import org.example.models.Task;
 import org.example.models.TaskStatus;
 import org.example.models.User;
 import org.example.models.UserRole;
+import org.example.repositories.ListBasedTaskRepository;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
 import org.example.services.TaskService;
 import org.example.services.UserService;
+import org.example.utils.exceptions.ProjectNotFoundException;
+import org.example.utils.exceptions.TaskNotFoundException;
 
 public class ConsoleMenu {
     private final UserService userService;
@@ -537,15 +540,14 @@ public class ConsoleMenu {
                 ValidationUtils.validateTaskID(taskId);
 
                 Util.displayAsPrompt("\nEnter ID of project associated with this task");
-                String input = scanner.nextLine();
+                String projectId = scanner.nextLine();
 
-                if (input.equalsIgnoreCase("Q"))
+                if (projectId.equalsIgnoreCase("Q"))
                     return;
 
-                ValidationUtils.validateProjectID(input);
+                ValidationUtils.validateProjectID(projectId);
 
-                Project project = projectService.getProjectById(input);
-                task = taskService.removeTaskById(project, taskId);
+                task = taskService.removeTask(projectId, taskId);
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
@@ -558,7 +560,7 @@ public class ConsoleMenu {
                         task.getName()));
     }
 
-    private void addNewTask() {
+    private void addNewTask() throws ProjectNotFoundException {
         Util.displayAsHeading("ADD NEW TASK");
 
         boolean valid = false;
@@ -586,7 +588,7 @@ public class ConsoleMenu {
                 Util.displayAsPrompt("\nEnter task name");
                 String input = scanner.nextLine();
 
-                if (taskService.getTaskByName(project, input) != null) {
+                if (taskService.getTaskByName(project.getId(), input) != null) {
                     throw new Exception("Duplicate task name found. Change task name to continue.");
                 }
 
@@ -622,9 +624,9 @@ public class ConsoleMenu {
             }
         } while (!done);
 
-        taskService.addTaskToProject(
-                project,
-                taskService.createTask(taskName, taskStatus, projectId));
+        taskService.addNewTask(
+                project.getId(),
+                new Task(taskName, taskStatus, projectId));
 
         Util.displayText(String.format(
                 "\nTask '%s' added successfully to Project %s\n",
@@ -632,11 +634,12 @@ public class ConsoleMenu {
                 project.getId()));
     }
 
-    private void updateTaskStatus() {
+    private void updateTaskStatus() throws TaskNotFoundException, ProjectNotFoundException {
         Util.displayAsHeading("UPDATE TASK STATUS");
 
         boolean valid = false;
         Task task = null;
+        Project project = null;
         do {
             try {
                 Util.displayAsPrompt("\nEnter task ID (or Q to quit)");
@@ -655,8 +658,8 @@ public class ConsoleMenu {
 
                 ValidationUtils.validateProjectID(input);
 
-                Project project = projectService.getProjectById(input);
-                task = taskService.getTaskById(project, taskId);
+                project = projectService.getProjectById(input);
+                task = taskService.getTask(project.getId(), taskId);
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage() + ". " + "Please try again");
@@ -671,15 +674,15 @@ public class ConsoleMenu {
 
             switch (taskStatus) {
                 case "P":
-                    taskService.updateTaskStatus(task, TaskStatus.PENDING);
+                    taskService.updateTaskStatus(project.getId(), task.getId(), TaskStatus.PENDING);
                     valid = true;
                     break;
                 case "I":
-                    taskService.updateTaskStatus(task, TaskStatus.IN_PROGRESS);
+                    taskService.updateTaskStatus(project.getId(), task.getId(), TaskStatus.IN_PROGRESS);
                     valid = true;
                     break;
                 case "C":
-                    taskService.updateTaskStatus(task, TaskStatus.COMPLETED);
+                    taskService.updateTaskStatus(project.getId(), task.getId(), TaskStatus.COMPLETED);
                     valid = true;
                     break;
                 default:
@@ -784,7 +787,7 @@ public class ConsoleMenu {
 
                 switch (type) {
                     case "S":
-                        project = new SoftwareProject(name, description, teamSize, budget);
+                        project = new SoftwareProject(name, description, teamSize, budget, new ListBasedTaskRepository());
                         valid = true;
                         break;
                     case "H":
@@ -803,7 +806,7 @@ public class ConsoleMenu {
 
                         } while (materialCost <= 0);
 
-                        project = new HardwareProject(name, description, teamSize, budget, materialCost);
+                        project = new HardwareProject(name, description, teamSize, budget, materialCost, new ListBasedTaskRepository());
                         valid = true;
                         break;
                     default:

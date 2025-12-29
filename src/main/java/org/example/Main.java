@@ -2,6 +2,9 @@ package org.example;
 
 import java.util.Scanner;
 
+import org.example.models.Project;
+import org.example.repositories.ListBasedTaskRepository;
+import org.example.repositories.MapBasedProjectRepository;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
 import org.example.services.TaskService;
@@ -15,7 +18,7 @@ public class Main {
         UserService userService = UserService.getService();
         ProjectService projectService = ProjectService.getService();
         ReportService reportService = ReportService.getService();
-        TaskService taskService = TaskService.getService();
+        TaskService<Project> taskService = new TaskService<>(new MapBasedProjectRepository<>());
 
         ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService, projectService, reportService, taskService);
         consoleMenu.start();
