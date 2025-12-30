@@ -30,7 +30,7 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
 
     @Override
     public void add(T project) {
-        projects.put(project.getId(), project);
+        projects.put(project.getId().toUpperCase(), project);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
 
     @Override
     public T getById(String id) {
-        return projects.get(id);
+        return projects.get(id.toUpperCase());
     }
 
     @Override

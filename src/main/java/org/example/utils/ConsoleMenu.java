@@ -1,7 +1,6 @@
 package org.example.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import org.example.models.HardwareProject;
@@ -22,18 +21,19 @@ import org.example.utils.exceptions.TaskNotFoundException;
 
 public class ConsoleMenu {
     private final UserService userService;
-    private final ProjectService projectService;
+    private final ProjectService<Project> projectService;
     private final ReportService reportService;
-    private final TaskService taskService;
+    private final TaskService<Project> taskService;
     private final Scanner scanner;
     private User user;
 
     public ConsoleMenu(
             Scanner scanner,
             UserService userService,
-            ProjectService projectService,
+            ProjectService<Project> projectService,
             ReportService reportService,
-            TaskService taskService) {
+            TaskService<Project> taskService
+    ) {
         this.scanner = scanner;
         this.userService = userService;
         this.projectService = projectService;
@@ -177,7 +177,7 @@ public class ConsoleMenu {
                                         user.getName()),
                                 user.getRole()));
 
-                Util.displayAsMenu("Main Menu", menuItems);
+                Util.displayAsOption("Main Menu", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -233,7 +233,7 @@ public class ConsoleMenu {
     private void viewStatusReports() {
         Util.displayAsHeading("PROJECT STATUS REPORT");
 
-        reportService.generateReport(projectService);
+        reportService.viewStatusReport();
     }
 
     private void manageTaskMenu() {
@@ -251,7 +251,7 @@ public class ConsoleMenu {
 
                 Util.displayText("Welcome to the Manage Tasks portal");
 
-                Util.displayAsMenu("Task Menu", menuItems);
+                Util.displayAsOption("Task Menu", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -284,7 +284,7 @@ public class ConsoleMenu {
 
         menuItems.add(String.format(
                 "View All Projects (%s)",
-                projectService.getProjectCount()));
+                projectService.getProjectRepository().size()));
         menuItems.add("Software Projects only");
         menuItems.add("Hardware Projects only");
         menuItems.add("Search by Budget Range");
@@ -295,7 +295,7 @@ public class ConsoleMenu {
             try {
                 Util.displayAsHeading("Project Catalog");
 
-                Util.displayAsMenu("Filter Options", menuItems);
+                Util.displayAsOption("Filter Options", menuItems);
 
                 Util.displayAsPrompt("\nEnter filter choice");
 
@@ -353,65 +353,70 @@ public class ConsoleMenu {
             }
         } while (maximumBudgetRange <= 0);
 
-        Project[] projects = projectService.getAllProjects();
+//        Project[] projects = projectService.getAllProjects();
+//
+//        final int ROW_WIDTH = 132;
+//        Util.displayTableHeader(
+//                ROW_WIDTH,
+//                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+//                "ID",
+//                "PROJECT NAME",
+//                "TYPE",
+//                "TEAM SIZE",
+//                "BUDGET",
+//                "DESCRIPTION");
+//
+//        for (Project project : projects) {
+//            if (project.getBudget() >= minimumBudgetRange
+//                    && project.getBudget() <= maximumBudgetRange) {
+//                Util.displayTableRow(
+//                        ROW_WIDTH,
+//                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+//                        project.getId(),
+//                        project.getName(),
+//                        project.getType(),
+//                        project.getTeamSize(),
+//                        project.getBudget(),
+//                        project.getDescription());
+//            }
+//        }
 
-        final int ROW_WIDTH = 132;
-        Util.displayTableHeader(
-                ROW_WIDTH,
-                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                "ID",
-                "PROJECT NAME",
-                "TYPE",
-                "TEAM SIZE",
-                "BUDGET",
-                "DESCRIPTION");
-
-        for (Project project : projects) {
-            if (project.getBudget() >= minimumBudgetRange
-                    && project.getBudget() <= maximumBudgetRange) {
-                Util.displayTableRow(
-                        ROW_WIDTH,
-                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                        project.getId(),
-                        project.getName(),
-                        project.getType(),
-                        project.getTeamSize(),
-                        project.getBudget(),
-                        project.getDescription());
-            }
-        }
+        projectService.viewByBudgetRange(minimumBudgetRange, maximumBudgetRange);
     }
 
     private void viewProjectByType(ProjectType type) {
-        Project[] projects = projectService.getAllProjects();
-
-        final int ROW_WIDTH = 132;
-        Util.displayTableHeader(
-                ROW_WIDTH,
-                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                "ID",
-                "PROJECT NAME",
-                "TYPE",
-                "TEAM SIZE",
-                "BUDGET",
-                "DESCRIPTION");
-
-        Arrays
-                .stream(projects)
-                .filter(project -> project.getType() == type)
-                .forEach(project -> Util.displayTableRow(
-                        ROW_WIDTH,
-                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                        project.getId(),
-                        project.getName(),
-                        project.getType(),
-                        project.getTeamSize(),
-                        project.getBudget(),
-                        project.getDescription()));
+        projectService.viewByType(type);
+//        Project[] projects = projectService.getAllProjects();
+//
+//        final int ROW_WIDTH = 132;
+//        Util.displayTableHeader(
+//                ROW_WIDTH,
+//                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+//                "ID",
+//                "PROJECT NAME",
+//                "TYPE",
+//                "TEAM SIZE",
+//                "BUDGET",
+//                "DESCRIPTION");
+//
+//        Arrays
+//                .stream(projects)
+//                .filter(project -> project.getType() == type)
+//                .forEach(project -> Util.displayTableRow(
+//                        ROW_WIDTH,
+//                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+//                        project.getId(),
+//                        project.getName(),
+//                        project.getType(),
+//                        project.getTeamSize(),
+//                        project.getBudget(),
+//                        project.getDescription()));
     }
 
     private void viewAllProjects() {
-        projectService.displayAllProjects();
+//        projectService.displayAllProjects();
+
+        projectService.viewProjects();
 
         boolean running = true;
         Project project;
@@ -419,15 +424,20 @@ public class ConsoleMenu {
             try {
                 Util.displayAsPrompt("\nEnter project ID to view details (or 0 to return)");
 
-                String input = scanner.nextLine();
+                String projectId = scanner.nextLine();
 
-                if (input.equals("0")) {
+                if (projectId.equals("0")) {
                     return;
                 }
 
-                ValidationUtils.validateProjectID(input);
+                ValidationUtils.validateProjectID(projectId);
 
-                project = projectService.getProjectById(input);
+//                project = projectService.getProjectById(input);
+                project = projectService.getProjectRepository().getById(projectId);
+//                Util.displayAsHeading(String.format("Project Details: %s", projectId.toUpperCase()));
+//
+//                projectService.viewProject(projectId);
+
                 running = false;
 
                 if (user.getRole() == UserRole.ADMIN) {
@@ -454,9 +464,9 @@ public class ConsoleMenu {
             try {
                 Util.displayAsHeading(String.format("Project Details: %s", project.getId()));
 
-                projectService.displayProjectDetails(project);
+                projectService.viewProject(project.getId());
 
-                Util.displayAsMenu("Options", menuItems);
+                Util.displayAsOption("Options", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -494,9 +504,9 @@ public class ConsoleMenu {
             try {
                 Util.displayAsHeading(String.format("Project Details: %s", project.getId()));
 
-                projectService.displayProjectDetails(project);
+                projectService.viewProject(project.getId());
 
-                Util.displayAsMenu("Options", menuItems);
+                Util.displayAsOption("Options", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -573,7 +583,7 @@ public class ConsoleMenu {
             try {
                 ValidationUtils.validateProjectID(projectId);
 
-                project = projectService.getProjectById(projectId);
+                project = projectService.getProjectRepository().getById(projectId);
 
                 valid = true;
             } catch (Exception e) {
@@ -588,7 +598,7 @@ public class ConsoleMenu {
                 Util.displayAsPrompt("\nEnter task name");
                 String input = scanner.nextLine();
 
-                if (taskService.getTaskByName(project.getId(), input) != null) {
+                if (project.getTasks().get(task -> task.getName().equalsIgnoreCase(input)) != null) {
                     throw new Exception("Duplicate task name found. Change task name to continue.");
                 }
 
@@ -625,13 +635,13 @@ public class ConsoleMenu {
         } while (!done);
 
         taskService.addNewTask(
-                project.getId(),
+                projectId,
                 new Task(taskName, taskStatus, projectId));
 
         Util.displayText(String.format(
                 "\nTask '%s' added successfully to Project %s\n",
                 taskName,
-                project.getId()));
+                projectId));
     }
 
     private void updateTaskStatus() throws TaskNotFoundException, ProjectNotFoundException {
@@ -651,15 +661,15 @@ public class ConsoleMenu {
                 ValidationUtils.validateTaskID(taskId);
 
                 Util.displayAsPrompt("\nEnter ID of project associated with this task");
-                String input = scanner.nextLine();
+                String projectId = scanner.nextLine();
 
-                if (input.equalsIgnoreCase("Q"))
+                if (projectId.equalsIgnoreCase("Q"))
                     return;
 
-                ValidationUtils.validateProjectID(input);
+                ValidationUtils.validateProjectID(projectId);
 
-                project = projectService.getProjectById(input);
-                task = taskService.getTask(project.getId(), taskId);
+                project = projectService.getProjectRepository().getById(projectId);
+                task = project.getTasks().get(t -> t.getId().equalsIgnoreCase(taskId));
                 valid = true;
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage() + ". " + "Please try again");
@@ -709,7 +719,7 @@ public class ConsoleMenu {
                 menuItems.add("View Project Catalog");
                 menuItems.add("Back to Main Menu");
 
-                Util.displayAsMenu("Project Management Menu", menuItems);
+                Util.displayAsOption("Project Management Menu", menuItems);
 
                 Util.displayAsPrompt("\nEnter your choice");
 
@@ -815,7 +825,7 @@ public class ConsoleMenu {
                 }
             } while (!valid);
 
-            projectService.addProject(project);
+            projectService.addNewProject(project);
             Util.displayText("\nProject added successfully");
         } catch (Exception e) {
             Util.displayAsError(e.getMessage());

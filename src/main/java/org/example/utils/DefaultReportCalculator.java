@@ -18,6 +18,6 @@ public class DefaultReportCalculator implements ReportCalculator {
 
     @Override
     public double calculateTaskProgressionRate(TaskRepository tasks) {
-        return (double) calculateCompletedTasks(tasks) / tasks.size() * 100;
+        return tasks.size() <= 0 ? 0 : (double) calculateCompletedTasks(tasks) / tasks.size() * 100;
     }
 }

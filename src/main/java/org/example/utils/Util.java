@@ -1,8 +1,12 @@
 package org.example.utils;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
+import org.example.models.HardwareProject;
+import org.example.models.Project;
+import org.example.models.SoftwareProject;
+import org.example.repositories.ListBasedTaskRepository;
 import org.example.services.ProjectService;
 import org.example.services.UserService;
 
@@ -51,50 +55,62 @@ public class Util {
         System.out.println(line + "\n");
     }
 
-    public static void displayAsMenu(String heading, ArrayList<String> menus) {
-        System.out.println("\n" + heading);
+    public static void displayAsOption(String heading, List<String> options) {
+        System.out.println("\n" + capitalizeText(heading));
         System.out.println("-".repeat(heading.length()));
 
         IntStream
-                .range(0, menus.size())
-                .forEach(i -> System.out.printf("%d. %s\n", i + 1, menus.get(i)));
+                .range(0, options.size())
+                .forEach(i -> System.out.printf("%d. %s\n", i + 1, options.get(i)));
     }
 
     /**
      * Populates the app's user and project list
      */
-    public static void seedDatabase(ProjectService projectService, UserService userService) throws Exception {
+    public static void seedDatabase(ProjectService<Project> projectService, UserService userService) throws Exception {
         userService.addAdminUser("alfred", "a");
 
         userService.addRegularUser("scar", "r");
 
-        projectService.addSoftwareProject(
-                "Azure Project",
-                "sdfkj dfa",
-                12,
-                1324.32);
-        projectService.addSoftwareProject(
-                "AWS Project",
-                "dfa dfa",
-                102,
-                13240.32);
-        projectService.addSoftwareProject(
-                "Oracle Project",
-                "sdf5grgadfkj dfa",
-                42,
-                12024.32);
+        projectService.addNewProject(
+                new SoftwareProject(
+                        "Azure Project",
+                        "sdfkj dfa",
+                        12,
+                        1324.32,
+                        new ListBasedTaskRepository()
+                )
+        );
 
-        projectService.addHardwareProject(
-                "IT Project",
-                "sdf5grgadfkj dfa",
-                42,
-                12024.32,
-                10394);
-        projectService.addHardwareProject(
-                "Engineer PR",
-                "sdf5grgadfkj dfa",
-                42,
-                12024.32,
-                10394);
+        projectService.addNewProject(
+                new SoftwareProject(
+                        "AWS Project",
+                        "dfa dfa",
+                        102,
+                        13240.32,
+                        new ListBasedTaskRepository()
+                )
+        );
+
+        projectService.addNewProject(
+                new SoftwareProject(
+                        "Oracle Project",
+                        "sdf5grgadfkj dfa",
+                        42,
+                        12024.32,
+                        new ListBasedTaskRepository()
+                )
+        );
+
+        projectService.addNewProject(
+                new HardwareProject(
+                        "IT Project",
+                        "sdf5grgadfkj dfa",
+                        42,
+                        12024.32,
+                        10394,
+                        new ListBasedTaskRepository()
+                )
+        );
     }
 }

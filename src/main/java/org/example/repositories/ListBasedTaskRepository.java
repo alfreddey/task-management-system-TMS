@@ -30,9 +30,16 @@ public class ListBasedTaskRepository implements TaskRepository, UnaryIterable<Ta
     }
 
     @Override
-    public Task get(Predicate<Task> condition) throws TaskNotFoundException {
+    public Task get(Predicate<Task> condition) {
         return tasks.stream()
                 .filter(condition)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Task getById(String id) throws TaskNotFoundException {
+        return tasks.stream()
+                .filter(t -> t.getId().equalsIgnoreCase(id))
                 .findFirst()
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
     }
