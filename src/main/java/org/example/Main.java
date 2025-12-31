@@ -16,43 +16,47 @@ import org.example.services.ReportService;
 import org.example.services.TaskServiceV0;
 import org.example.services.UserService;
 import org.example.utils.DefaultReportCalculator;
-import org.example.utils.MenuV0;
+import org.example.menus.MenuV0;
+import org.example.utils.FileUtils;
 import org.example.views.TableBasedProjectView;
 import org.example.views.TableBasedReportView;
 import org.example.views.TableBasedTaskView;
 
 public class Main {
     public static void main(String[] args) {
-
-      try (Scanner scanner = new Scanner(System.in)) {
         ProjectRepository<Project> projectRepository = new MapBasedProjectRepository<>();
 
-        ProjectView<Project> projectView = new TableBasedProjectView<>();
-        ReportView reportView = new TableBasedReportView();
-        TaskView taskView = new TableBasedTaskView();
+        try (Scanner scanner = new Scanner(System.in)) {
+            projectRepository = FileUtils.loadProjects(Project.class);
 
-        ReportCalculator reportCalculator = new DefaultReportCalculator();
+            ProjectView<Project> projectView = new TableBasedProjectView<>();
+            ReportView reportView = new TableBasedReportView();
+            TaskView taskView = new TableBasedTaskView();
 
-        UserService userService = UserService.getService();
+            ReportCalculator reportCalculator = new DefaultReportCalculator();
 
-        ProjectService<Project> projectService = new ProjectService<>(
-                projectRepository,
-                projectView,
-                reportCalculator
-        );
+            UserService userService = UserService.getService();
 
-        ReportService reportService = new ReportService(
-                new DefaultReportCalculator(),
-                reportView,
-                projectRepository
-        );
+            ProjectService<Project> projectService = new ProjectService<>(
+                    projectRepository,
+                    projectView,
+                    reportCalculator
+            );
 
-        TaskService taskService = new TaskServiceV0<>(projectRepository, taskView);
+            ReportService reportService = new ReportService(
+                    new DefaultReportCalculator(),
+                    reportView,
+                    projectRepository
+            );
 
-        Menu consoleMenu = new MenuV0(scanner, projectService, taskService, userService, reportService);
-        consoleMenu.start();
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
+            TaskService taskService = new TaskServiceV0<>(projectRepository, taskView);
+
+            Menu consoleMenu = new MenuV0(scanner, projectService, taskService, userService, reportService);
+            consoleMenu.start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            FileUtils.saveProjects(projectRepository);
+        }
     }
 }
