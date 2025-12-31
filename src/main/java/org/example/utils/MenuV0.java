@@ -1,5 +1,6 @@
 package org.example.utils;
 
+import org.example.interfaces.ConcurrentMenu;
 import org.example.interfaces.MainMenu;
 import org.example.interfaces.Menu;
 import org.example.interfaces.services.TaskService;
@@ -9,12 +10,12 @@ import org.example.services.ProjectService;
 import org.example.services.ReportService;
 import org.example.services.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class MenuV0 implements MainMenu, Menu {
+public class MenuV0 implements MainMenu, Menu, ConcurrentMenu {
+    private final Random random = new Random();
     private final Scanner scanner;
     private final ProjectService<Project> projectService;
     private final TaskService taskService;
@@ -164,7 +165,7 @@ public class MenuV0 implements MainMenu, Menu {
             } else if (choice.equalsIgnoreCase("3")) {
                 valid = true;
             }
-        } while(!valid);
+        } while (!valid);
     }
 
     public void browseProjects() {
@@ -274,6 +275,7 @@ public class MenuV0 implements MainMenu, Menu {
         options.add("Manage Tasks");
         options.add("View Status Reports");
         options.add("Switch User");
+        options.add("Concurrent Task Updates");
         options.add("Exit");
 
         boolean running = true;
@@ -313,6 +315,9 @@ public class MenuV0 implements MainMenu, Menu {
                         login();
                         break;
                     case "5":
+                        concurrentTaskStatusUpdate();
+                        break;
+                    case "6":
                         running = false;
                         break;
                     default:
@@ -562,7 +567,7 @@ public class MenuV0 implements MainMenu, Menu {
 
         reportService.viewStatusReport();
 
-        Util.displayAsPrompt("\nEnter any key to exit");
+        Util.displayAsPrompt("\nPress Enter key to exit");
 
         scanner.nextLine();
     }
@@ -650,8 +655,8 @@ public class MenuV0 implements MainMenu, Menu {
                 Util.displayAsOption("options", List.of(
                         "Create a new project",
                         String.format(
-                        "View All Projects (%s)",
-                        projectService.getProjectRepository().size()),
+                                "View All Projects (%s)",
+                                projectService.getProjectRepository().size()),
                         "Exit"));
 
                 Util.displayAsPrompt("\nenter your choice");
@@ -762,6 +767,93 @@ public class MenuV0 implements MainMenu, Menu {
             Util.displayText("\nProject added successfully");
         } catch (Exception e) {
             Util.displayAsError(e.getMessage());
+        }
+    }
+
+    @Override
+    public void concurrentTaskStatusUpdate() {
+        Util.displayAsHeading("PARALLEL TASK UPDATE SIMULATION");
+
+        String projectId = promptForProjectId();
+        String taskId = promptForTaskId();
+        int numThreads = promptForNumberOfThreads();
+
+        System.out.println();
+
+        try (ExecutorService executor = Executors.newFixedThreadPool(numThreads)) {
+
+            for (int i = 0; i < numThreads; i++) {
+                executor.submit(() -> {
+                    try {
+                        TaskStatus randomStatus = getRandomStatus();
+                        taskService.updateTaskStatus(taskId, projectId, randomStatus);
+                        Util.displayText(
+                                String.format("Task %s updated to %s successfully by thread %s", taskId, randomStatus, Thread.currentThread().getName()));
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                });
+            }
+
+            executor.shutdown();
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println();
+
+        System.out.print("Press Enter key to exit");
+        scanner.nextLine();
+    }
+
+    private TaskStatus getRandomStatus() {
+        TaskStatus[] statuses = TaskStatus.values();
+        return statuses[random.nextInt(statuses.length)];
+    }
+
+    private String promptForProjectId() {
+        while (true) {
+            try {
+                Util.displayAsPrompt("Enter Project ID");
+                String input = scanner.nextLine();
+                ValidationUtils.validateProjectID(input);
+                return input;
+            } catch (Exception e) {
+                Util.displayAsError("Invalid Project ID: " + e.getMessage() + " Please try again.");
+            }
+        }
+    }
+
+    private String promptForTaskId() {
+        while (true) {
+            try {
+                Util.displayAsPrompt("Enter Task ID");
+                String input = scanner.nextLine();
+                ValidationUtils.validateTaskID(input);
+                return input;
+            } catch (Exception e) {
+                Util.displayAsError("Invalid Task ID: " + e.getMessage() + " Please try again.");
+            }
+        }
+    }
+
+    private int promptForNumberOfThreads() {
+        while (true) {
+            try {
+                Util.displayAsPrompt("Enter number of threads");
+                String input = scanner.nextLine();
+                int num = Integer.parseInt(input);
+                if (num <= 0) throw new Exception("Number must be greater than 0.");
+                return num;
+            } catch (NumberFormatException e) {
+                Util.displayAsError("Invalid number format. Please enter a positive integer.");
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
         }
     }
 }

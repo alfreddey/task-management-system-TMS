@@ -18,11 +18,13 @@ public class TaskServiceV0<T extends Project> implements TaskService {
         this.taskView = taskView;
     }
 
+    @Override
     public void viewTasks(String projectId) throws ProjectNotFoundException {
         taskView.viewTasks(projectRepository.getById(projectId).getTasks());
     }
 
-    public void updateTaskStatus(String taskId, String projectId, TaskStatus status) throws ProjectNotFoundException, TaskNotFoundException {
+    @Override
+    public synchronized void updateTaskStatus(String taskId, String projectId, TaskStatus status) throws ProjectNotFoundException, TaskNotFoundException {
         projectRepository
                 .getById(projectId)
                 .getTasks()
@@ -32,10 +34,12 @@ public class TaskServiceV0<T extends Project> implements TaskService {
                 );
     }
 
+    @Override
     public void addNewTask(String projectId, Task task) throws ProjectNotFoundException {
         projectRepository.getById(projectId).getTasks().add(task);
     }
 
+    @Override
     public Task removeTask(String projectId, String taskId) throws ProjectNotFoundException, TaskNotFoundException {
         return projectRepository
                 .getById(projectId)
