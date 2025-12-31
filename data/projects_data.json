@@ -1,1 +1,46 @@
-[{"id":"P004","name":"IT Project","description":"sdf5grgadfkj dfa","teamSize":42,"budget":12024.32,"type":"HARDWARE","tasks":{"tasks":[]}},{"id":"P001","name":"Azure Project","description":"sdfkj dfa","teamSize":12,"budget":1324.32,"type":"SOFTWARE","tasks":{"tasks":[]}},{"id":"P003","name":"Oracle Project","description":"sdf5grgadfkj dfa","teamSize":42,"budget":12024.32,"type":"SOFTWARE","tasks":{"tasks":[]}},{"id":"P002","name":"AWS Project","description":"dfa dfa","teamSize":102,"budget":13240.32,"type":"SOFTWARE","tasks":{"tasks":[]}}]
+[
+  {
+    "id": "P001",
+    "name": "Website App",
+    "description": "A web application project",
+    "teamSize": 12,
+    "budget": 12.0,
+    "type": "SOFTWARE",
+    "tasks": {
+      "repoType": "ListBasedTaskRepository",
+      "tasks": [
+        {
+          "status": "PENDING",
+          "id": "T001",
+          "name": "Design UI",
+          "projectId": "P001"
+        },
+        {
+          "status": "COMPLETED",
+          "id": "T003",
+          "name": "Implement Backend",
+          "projectId": "P001"
+        }
+      ]
+    }
+  },
+  {
+    "id": "P002",
+    "name": "Robot Arm",
+    "description": "Industrial robot arm project",
+    "teamSize": 13,
+    "budget": 21200.0,
+    "type": "HARDWARE",
+    "tasks": {
+      "repoType": "ListBasedTaskRepository",
+      "tasks": [
+        {
+          "status": "COMPLETED",
+          "id": "T002",
+          "name": "Assemble Parts",
+          "projectId": "P002"
+        }
+      ]
+    }
+  }
+]

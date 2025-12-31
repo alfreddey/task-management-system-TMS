@@ -24,10 +24,9 @@ import org.example.views.TableBasedTaskView;
 
 public class Main {
     public static void main(String[] args) {
-        ProjectRepository<Project> projectRepository = new MapBasedProjectRepository<>();
 
         try (Scanner scanner = new Scanner(System.in)) {
-            projectRepository = FileUtils.loadProjects(Project.class);
+            ProjectRepository<Project> projectRepository = FileUtils.loadProjects(Project.class);
 
             ProjectView<Project> projectView = new TableBasedProjectView<>();
             ReportView reportView = new TableBasedReportView();
@@ -53,10 +52,10 @@ public class Main {
 
             Menu consoleMenu = new MenuV0(scanner, projectService, taskService, userService, reportService);
             consoleMenu.start();
+
+            FileUtils.saveProjects(projectRepository);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
-            FileUtils.saveProjects(projectRepository);
         }
     }
 }

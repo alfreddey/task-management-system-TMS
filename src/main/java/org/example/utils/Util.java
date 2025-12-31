@@ -69,45 +69,45 @@ public class Util {
 
         userService.addRegularUser("scar", "r");
 
-        projectService.addNewProject(
-                new SoftwareProject(
-                        "Azure Project",
-                        "sdfkj dfa",
-                        12,
-                        1324.32,
-                        new ListBasedTaskRepository()
-                )
-        );
-
-        projectService.addNewProject(
-                new SoftwareProject(
-                        "AWS Project",
-                        "dfa dfa",
-                        102,
-                        13240.32,
-                        new ListBasedTaskRepository()
-                )
-        );
-
-        projectService.addNewProject(
-                new SoftwareProject(
-                        "Oracle Project",
-                        "sdf5grgadfkj dfa",
-                        42,
-                        12024.32,
-                        new ListBasedTaskRepository()
-                )
-        );
-
-        projectService.addNewProject(
-                new HardwareProject(
-                        "IT Project",
-                        "sdf5grgadfkj dfa",
-                        42,
-                        12024.32,
-                        10394,
-                        new ListBasedTaskRepository()
-                )
-        );
+//        projectService.addNewProject(
+//                new SoftwareProject(
+//                        "Azure Project",
+//                        "sdfkj dfa",
+//                        12,
+//                        1324.32,
+//                        new ListBasedTaskRepository()
+//                )
+//        );
+//
+//        projectService.addNewProject(
+//                new SoftwareProject(
+//                        "AWS Project",
+//                        "dfa dfa",
+//                        102,
+//                        13240.32,
+//                        new ListBasedTaskRepository()
+//                )
+//        );
+//
+//        projectService.addNewProject(
+//                new SoftwareProject(
+//                        "Oracle Project",
+//                        "sdf5grgadfkj dfa",
+//                        42,
+//                        12024.32,
+//                        new ListBasedTaskRepository()
+//                )
+//        );
+//
+//        projectService.addNewProject(
+//                new HardwareProject(
+//                        "IT Project",
+//                        "sdf5grgadfkj dfa",
+//                        42,
+//                        12024.32,
+//                        10394,
+//                        new ListBasedTaskRepository()
+//                )
+//        );
     }
 }
