@@ -1,6 +1,5 @@
 package org.example.repositories;
 
-import org.example.Main;
 import org.example.interfaces.UnaryIterable;
 import org.example.interfaces.repositories.ProjectRepository;
 import org.example.models.Project;
@@ -58,7 +57,7 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
     }
 
     @Override
-    public T remove(Predicate<T> condition) throws ProjectNotFoundException {
+    public T remove(Predicate<T> condition) {
         return null;
     }
 

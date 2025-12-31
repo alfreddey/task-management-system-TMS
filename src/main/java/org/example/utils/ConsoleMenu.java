@@ -14,7 +14,7 @@ import org.example.models.UserRole;
 import org.example.repositories.ListBasedTaskRepository;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
-import org.example.services.TaskService;
+import org.example.services.TaskServiceV0;
 import org.example.services.UserService;
 import org.example.utils.exceptions.ProjectNotFoundException;
 import org.example.utils.exceptions.TaskNotFoundException;
@@ -23,7 +23,7 @@ public class ConsoleMenu {
     private final UserService userService;
     private final ProjectService<Project> projectService;
     private final ReportService reportService;
-    private final TaskService<Project> taskService;
+    private final TaskServiceV0<Project> taskService;
     private final Scanner scanner;
     private User user;
 
@@ -32,7 +32,7 @@ public class ConsoleMenu {
             UserService userService,
             ProjectService<Project> projectService,
             ReportService reportService,
-            TaskService<Project> taskService
+            TaskServiceV0<Project> taskService
     ) {
         this.scanner = scanner;
         this.userService = userService;

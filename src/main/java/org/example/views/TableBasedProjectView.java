@@ -35,18 +35,16 @@ public class TableBasedProjectView<T extends Project> implements ProjectView<T> 
                 "DESCRIPTION"
         );
 
-        projects.forEach(project -> {
-            Util.displayTableRow(
-                    ROW_WIDTH,
-                    "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-                    project.getId(),
-                    project.getName(),
-                    project.getType(),
-                    project.getTeamSize(),
-                    project.getBudget(),
-                    project.getDescription()
-            );
-        });
+        projects.forEach(project -> Util.displayTableRow(
+                ROW_WIDTH,
+                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
+                project.getId(),
+                project.getName(),
+                project.getType(),
+                project.getTeamSize(),
+                project.getBudget(),
+                project.getDescription()
+        ));
     }
 
     public void viewProject(T project) {
@@ -56,11 +54,6 @@ public class TableBasedProjectView<T extends Project> implements ProjectView<T> 
         System.out.printf("\nBudget: %s\n", project.getBudget());
 
         var tasks = project.getTasks();
-//        if (tasks.size() <= 0) {
-//            System.out.println("\nNo task associated with this project.");
-//        } else {
-//            taskView.viewTasks(tasks);
-//        }
 
         taskView.viewTasks(tasks);
     }

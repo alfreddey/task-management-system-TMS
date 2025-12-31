@@ -5,7 +5,7 @@ import org.example.interfaces.repositories.ProjectRepository;
 import org.example.interfaces.views.ReportView;
 import org.example.models.Project;
 
-public class ReportService{
+public class ReportService {
     private final ReportCalculator reportCalculator;
     private final ReportView reportView;
     private final ProjectRepository<Project> projectRepository;

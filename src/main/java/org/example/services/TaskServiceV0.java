@@ -1,23 +1,19 @@
 package org.example.services;
 
 import org.example.interfaces.repositories.ProjectRepository;
-import org.example.interfaces.repositories.TaskRepository;
+import org.example.interfaces.services.TaskService;
 import org.example.interfaces.views.TaskView;
 import org.example.models.Project;
 import org.example.models.Task;
 import org.example.models.TaskStatus;
-import org.example.repositories.ListBasedTaskRepository;
 import org.example.utils.exceptions.ProjectNotFoundException;
 import org.example.utils.exceptions.TaskNotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TaskService<T extends Project> {
+public class TaskServiceV0<T extends Project> implements TaskService {
     ProjectRepository<T> projectRepository;
     TaskView taskView;
 
-    public TaskService(ProjectRepository<T> projectRepository, TaskView taskView) {
+    public TaskServiceV0(ProjectRepository<T> projectRepository, TaskView taskView) {
         this.projectRepository = projectRepository;
         this.taskView = taskView;
     }
@@ -26,8 +22,8 @@ public class TaskService<T extends Project> {
         taskView.viewTasks(projectRepository.getById(projectId).getTasks());
     }
 
-    public Task updateTaskStatus(String taskId, String projectId, TaskStatus status) throws ProjectNotFoundException, TaskNotFoundException {
-        return projectRepository
+    public void updateTaskStatus(String taskId, String projectId, TaskStatus status) throws ProjectNotFoundException, TaskNotFoundException {
+        projectRepository
                 .getById(projectId)
                 .getTasks()
                 .updateTaskStatus(
@@ -47,9 +43,5 @@ public class TaskService<T extends Project> {
                 .removeTask(
                         task -> task.getId().equalsIgnoreCase(taskId)
                 );
-    }
-
-    public ProjectRepository<T> getProjectRepository() {
-        return projectRepository;
     }
 }

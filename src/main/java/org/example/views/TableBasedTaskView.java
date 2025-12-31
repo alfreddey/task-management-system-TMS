@@ -1,6 +1,5 @@
 package org.example.views;
 
-import org.example.interfaces.UnaryIterable;
 import org.example.interfaces.repositories.TaskRepository;
 import org.example.interfaces.views.TaskView;
 import org.example.models.Task;
@@ -29,14 +28,12 @@ public class TableBasedTaskView implements TaskView {
                     "TASK NAME",
                     "STATUS");
 
-            tasks.forEach(task -> {
-                Util.displayTableRow(
-                        ROW_WIDTH,
-                        "| %-4s | %-20s | %-20s |",
-                        task.getId(),
-                        task.getName(),
-                        task.getStatus());
-            });
+            tasks.forEach(task -> Util.displayTableRow(
+                    ROW_WIDTH,
+                    "| %-4s | %-20s | %-20s |",
+                    task.getId(),
+                    task.getName(),
+                    task.getStatus()));
         }
     }
 

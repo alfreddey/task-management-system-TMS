@@ -61,12 +61,9 @@ public class Util {
 
         IntStream
                 .range(0, options.size())
-                .forEach(i -> System.out.printf("%d. %s\n", i + 1, options.get(i)));
+                .forEach(i -> System.out.printf("%d. %s\n", i + 1, capitalizeText(options.get(i))));
     }
 
-    /**
-     * Populates the app's user and project list
-     */
     public static void seedDatabase(ProjectService<Project> projectService, UserService userService) throws Exception {
         userService.addAdminUser("alfred", "a");
 

@@ -5,17 +5,16 @@ import java.util.Scanner;
 import org.example.interfaces.Menu;
 import org.example.interfaces.ReportCalculator;
 import org.example.interfaces.repositories.ProjectRepository;
+import org.example.interfaces.services.TaskService;
 import org.example.interfaces.views.ProjectView;
 import org.example.interfaces.views.ReportView;
 import org.example.interfaces.views.TaskView;
 import org.example.models.Project;
-import org.example.repositories.ListBasedTaskRepository;
 import org.example.repositories.MapBasedProjectRepository;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
-import org.example.services.TaskService;
+import org.example.services.TaskServiceV0;
 import org.example.services.UserService;
-import org.example.utils.ConsoleMenu;
 import org.example.utils.DefaultReportCalculator;
 import org.example.utils.MenuV0;
 import org.example.views.TableBasedProjectView;
@@ -48,7 +47,7 @@ public class Main {
                 projectRepository
         );
 
-        TaskService<Project> taskService = new TaskService<>(projectRepository, taskView);
+        TaskService taskService = new TaskServiceV0<>(projectRepository, taskView);
 
         Menu consoleMenu = new MenuV0(scanner, projectService, taskService, userService, reportService);
         consoleMenu.start();

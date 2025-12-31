@@ -1,11 +1,12 @@
 package org.example.utils;
 
+import org.example.interfaces.MainMenu;
 import org.example.interfaces.Menu;
+import org.example.interfaces.services.TaskService;
 import org.example.models.*;
 import org.example.repositories.ListBasedTaskRepository;
 import org.example.services.ProjectService;
 import org.example.services.ReportService;
-import org.example.services.TaskService;
 import org.example.services.UserService;
 
 import java.util.ArrayList;
@@ -13,15 +14,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class MenuV0 implements Menu {
-    private Scanner scanner;
-    private ProjectService<Project> projectService;
-    private TaskService<Project> taskService;
-    private UserService userService;
-    private ReportService reportService;
+public class MenuV0 implements MainMenu, Menu {
+    private final Scanner scanner;
+    private final ProjectService<Project> projectService;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final ReportService reportService;
     private User user;
 
-    public MenuV0(Scanner scanner, ProjectService<Project> projectService, TaskService<Project> taskService, UserService userService, ReportService reportService) {
+    public MenuV0(Scanner scanner, ProjectService<Project> projectService, TaskService taskService, UserService userService, ReportService reportService) {
         this.scanner = scanner;
         this.userService = userService;
         this.taskService = taskService;
@@ -403,11 +404,14 @@ public class MenuV0 implements Menu {
                 ValidationUtils.validateTaskID(taskId);
 
                 task = taskService.removeTask(targetProject.getId(), taskId);
-                valid = true;
+
+                if (task != null) {
+                    valid = true;
+                }
             } catch (Exception e) {
                 Util.displayAsError(e.getMessage());
             }
-        } while (valid);
+        } while (!valid);
 
         Util.displayText(
                 String.format(
@@ -643,7 +647,12 @@ public class MenuV0 implements Menu {
             try {
                 Util.displayAsHeading("manage project");
 
-                Util.displayAsOption("options", List.of("Create a new project", "View projects", "Exit"));
+                Util.displayAsOption("options", List.of(
+                        "Create a new project",
+                        String.format(
+                        "View All Projects (%s)",
+                        projectService.getProjectRepository().size()),
+                        "Exit"));
 
                 Util.displayAsPrompt("\nenter your choice");
 

@@ -1,8 +1,7 @@
 package org.example.models;
 
 import org.example.services.ProjectService;
-import org.example.services.TaskService;
-import org.example.utils.exceptions.InvalidTaskIDException;
+import org.example.services.TaskServiceV0;
 import org.example.utils.exceptions.TaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProjectTest {
     ProjectService projectService;
-    TaskService taskService;
+    TaskServiceV0 taskService;
     Project softwareProject;
     Project hardwareProject;
 
@@ -20,7 +19,7 @@ class ProjectTest {
     @BeforeEach
     void setUp() {
         projectService = ProjectService.getService();
-        taskService = TaskService.getService();
+        taskService = TaskServiceV0.getService();
 
         softwareProject = new SoftwareProject("Software PR", "description", 12, 34.4);
         hardwareProject = new HardwareProject("Hardware PR", "desc", 34, 09.23, 23);

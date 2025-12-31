@@ -54,7 +54,7 @@ public class ListBasedTaskRepository implements TaskRepository, UnaryIterable<Ta
     }
 
     @Override
-    public Task updateTaskStatus(Predicate<Task> condition, TaskStatus status) throws TaskNotFoundException {
+    public Task updateTaskStatus(Predicate<Task> condition, TaskStatus status) {
         var task = get(condition);
 
         task.setStatus(status);
