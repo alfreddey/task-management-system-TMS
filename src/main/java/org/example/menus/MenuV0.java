@@ -81,6 +81,8 @@ public class MenuV0 implements MainMenu, Menu, ConcurrentMenu {
 
                 if (input.equalsIgnoreCase("Q")) return;
 
+                ValidationUtils.validateEmail(input);
+
                 user = userService.getUserByEmail(input);
 
                 Util.displayText(

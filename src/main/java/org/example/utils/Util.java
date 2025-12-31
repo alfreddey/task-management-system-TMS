@@ -65,49 +65,8 @@ public class Util {
     }
 
     public static void seedDatabase(ProjectService<Project> projectService, UserService userService) throws Exception {
-        userService.addAdminUser("alfred", "a");
+        userService.addAdminUser("alfred", "al@gmail.com");
 
-        userService.addRegularUser("scar", "r");
-
-//        projectService.addNewProject(
-//                new SoftwareProject(
-//                        "Azure Project",
-//                        "sdfkj dfa",
-//                        12,
-//                        1324.32,
-//                        new ListBasedTaskRepository()
-//                )
-//        );
-//
-//        projectService.addNewProject(
-//                new SoftwareProject(
-//                        "AWS Project",
-//                        "dfa dfa",
-//                        102,
-//                        13240.32,
-//                        new ListBasedTaskRepository()
-//                )
-//        );
-//
-//        projectService.addNewProject(
-//                new SoftwareProject(
-//                        "Oracle Project",
-//                        "sdf5grgadfkj dfa",
-//                        42,
-//                        12024.32,
-//                        new ListBasedTaskRepository()
-//                )
-//        );
-//
-//        projectService.addNewProject(
-//                new HardwareProject(
-//                        "IT Project",
-//                        "sdf5grgadfkj dfa",
-//                        42,
-//                        12024.32,
-//                        10394,
-//                        new ListBasedTaskRepository()
-//                )
-//        );
+        userService.addRegularUser("scar", "r@mail.com");
     }
 }
