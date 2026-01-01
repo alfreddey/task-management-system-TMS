@@ -103,7 +103,49 @@ public class MenuV0 implements MainMenu, Menu, ConcurrentMenu {
 
     @Override
     public void register() {
+        String input;
+        String name;
+        String email;
 
+        Util.displayAsHeading("Registration portal");
+
+        Util.displayAsPrompt("Welcome, enter your name here");
+        name = scanner.nextLine();
+
+        boolean valid = false;
+        do {
+            try {
+                Util.displayAsPrompt("\nEnter your email");
+                email = scanner.nextLine();
+
+                ValidationUtils.validateEmail(email);
+
+                Util.displayAsPrompt("\nEnter your role (Admin - A / Regular - R)");
+                input = scanner.nextLine();
+
+                if (input.equalsIgnoreCase("A")) {
+                    user = userService.addAdminUser(name, email);
+
+                    Util.displayText(String.format("\nUser %s added successfully\n", name));
+
+                    mainMenuForAdminUser();
+                    valid = true;
+                } else if (input.equalsIgnoreCase("R")) {
+                    user = userService.addRegularUser(name, email);
+
+                    Util.displayText(String.format("\nUser %s added successfully\n", name));
+
+                    mainMenu();
+
+                    valid = true;
+                } else {
+                    valid = false;
+                    throw new Exception("Incorrect role. Please enter A for admin, and R for regular");
+                }
+            } catch (Exception e) {
+                Util.displayAsError(e.getMessage());
+            }
+        } while (!valid);
     }
 
     public void mainMenu() {
@@ -571,7 +613,10 @@ public class MenuV0 implements MainMenu, Menu, ConcurrentMenu {
 
         reportService.viewStatusReport();
 
-        Util.displayAsPrompt("\nPress Enter key to exit");
+
+        System.out.println();
+
+        System.out.print("\nPress Enter key to exit ");
 
         scanner.nextLine();
     }
