@@ -30,10 +30,30 @@ The project provide the following core functionalities:
     * **Status Reports**: Generate a console report that displays the progress for all projects and the average completion rate.
 
 
-4. **Interactive Console Interface**
+4. **User Management**
+
+   * **Authentication**: Users can register and log in to access the system.
+   * **Role-Based Access Control**:
+     - **Admin users** can create and manage projects, view status reports, and simulate concurrent updates from the main menu.
+     - **Regular users** are restricted to actions permitted by their assigned role.
+
+
+
+5. **Interactive Console Interface**
     * **Menu Navigation**: Easy-to-use numbered menu options for navigating between sub-menus
     * **Input validation**: Robust error handling for invalid menu options, project ids, and task ids.
     * **Formatted Output**: Clean, tabular display for project lists and reports.
+
+
+6. **Concurrency Simulation**
+
+   * **Concurrent Task Updates**: Simulates multiple task updates occurring at the same time.
+   * **Thread-Based Execution**:
+      - Executes task updates in parallel to test concurrency handling.
+      - Validates data consistency and thread safety.
+   * **Administrative Control**:
+      - Available only to **Admin users** through the main menu.
+
 
 ## Installation
 
