@@ -30,6 +30,21 @@ public class TableBasedReportView implements ReportView {
                     "TASKS",
                     "COMPLETED",
                     "PROGRESS (%)");
+
+            projects.forEach(project -> {
+                var tasks = project.getTasks();
+                Util.displayTableRow(
+                        ROW_WIDTH,
+                        "| %-10s | %-15s | %-10s | %-15s | %-15s |",
+                        project.getId(),
+                        project.getName(),
+                        tasks.size(),
+                        calculator.calculateCompletedTasks(tasks),
+                        calculator.calculateTaskProgressionRate(tasks)
+                );
+            });
+
+            System.out.printf("\nAVERAGE COMPLETION: %.2f%%", calculator.calculateAverageCompletionRate(projects));
         }
     }
 }
