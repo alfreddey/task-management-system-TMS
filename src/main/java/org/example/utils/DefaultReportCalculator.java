@@ -9,7 +9,13 @@ import org.example.models.Task;
 public class DefaultReportCalculator implements ReportCalculator {
     @Override
     public double calculateAverageCompletionRate(ProjectRepository<Project> projects) {
-        return 0;
+        final double[] sum = {0};
+
+        projects.forEach(project -> {
+            sum[0] += calculateTaskProgressionRate(project.getTasks());
+        });
+
+        return sum[0] / projects.size();
     }
 
     @Override
