@@ -355,64 +355,11 @@ public class ConsoleMenu {
             }
         } while (maximumBudgetRange <= 0);
 
-//        Project[] projects = projectService.getAllProjects();
-//
-//        final int ROW_WIDTH = 132;
-//        Util.displayTableHeader(
-//                ROW_WIDTH,
-//                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-//                "ID",
-//                "PROJECT NAME",
-//                "TYPE",
-//                "TEAM SIZE",
-//                "BUDGET",
-//                "DESCRIPTION");
-//
-//        for (Project project : projects) {
-//            if (project.getBudget() >= minimumBudgetRange
-//                    && project.getBudget() <= maximumBudgetRange) {
-//                Util.displayTableRow(
-//                        ROW_WIDTH,
-//                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-//                        project.getId(),
-//                        project.getName(),
-//                        project.getType(),
-//                        project.getTeamSize(),
-//                        project.getBudget(),
-//                        project.getDescription());
-//            }
-//        }
-
         projectService.viewByBudgetRange(minimumBudgetRange, maximumBudgetRange);
     }
 
     private void viewProjectByType(ProjectType type) {
         projectService.viewByType(type);
-//        Project[] projects = projectService.getAllProjects();
-//
-//        final int ROW_WIDTH = 132;
-//        Util.displayTableHeader(
-//                ROW_WIDTH,
-//                "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-//                "ID",
-//                "PROJECT NAME",
-//                "TYPE",
-//                "TEAM SIZE",
-//                "BUDGET",
-//                "DESCRIPTION");
-//
-//        Arrays
-//                .stream(projects)
-//                .filter(project -> project.getType() == type)
-//                .forEach(project -> Util.displayTableRow(
-//                        ROW_WIDTH,
-//                        "| %-4s | %-26s | %-15s | %-15s | %-15s | %-40s |",
-//                        project.getId(),
-//                        project.getName(),
-//                        project.getType(),
-//                        project.getTeamSize(),
-//                        project.getBudget(),
-//                        project.getDescription()));
     }
 
     private void viewAllProjects() {
@@ -436,9 +383,6 @@ public class ConsoleMenu {
 
 //                project = projectService.getProjectById(input);
                 project = projectService.getProjectRepository().getById(projectId);
-//                Util.displayAsHeading(String.format("Project Details: %s", projectId.toUpperCase()));
-//
-//                projectService.viewProject(projectId);
 
                 running = false;
 

@@ -42,9 +42,16 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
     }
 
     @Override
-    public T getById(String id) {
-        return projects.get(id.toUpperCase());
+    public T getById(String id) throws ProjectNotFoundException {
+        T project = projects.get(id);
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found with id: " + id);
+        }
+
+        return project;
     }
+
 
     @Override
     public ProjectRepository<T> filter(Predicate<T> condition) {
@@ -57,8 +64,15 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
     }
 
     @Override
-    public T remove(Predicate<T> condition) {
-        return null;
+    public T remove(Predicate<T> condition) throws ProjectNotFoundException {
+        T project = projects.values().stream()
+                .filter(condition)
+                .findFirst()
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        projects.remove(project.getId());
+
+        return project;
     }
 
     @Override
