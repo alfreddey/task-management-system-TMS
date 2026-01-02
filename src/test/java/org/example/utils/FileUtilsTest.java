@@ -28,26 +28,21 @@ class FileUtilsTest {
 
     @Test
     void testSaveAndLoadProjects() {
-        // Prepare sample project
         SoftwareProject project = new SoftwareProject(
                 "TestProject", "Desc", 3, 1000,
                 new ListBasedTaskRepository()
         );
         repo.add(project);
 
-        // Override FILE_PATH to temp folder
         Path filePath = tempDir.resolve("project_data.json");
 
-        // Save
         FileUtils.saveProjects(repo);
 
         assertTrue(filePath.getParent().toFile().exists(), "Directory should be created");
         assertTrue(filePath.toFile().exists() || true, "File should be created (or skipped if not overridden)");
 
-        // Load
         ProjectRepository<Project> loaded = FileUtils.loadProjects(Project.class);
         assertNotNull(loaded);
-        // Cannot guarantee exact content in temp dir without changing FILE_PATH, but repository returned
         assertTrue(loaded instanceof MapBasedProjectRepository);
     }
 

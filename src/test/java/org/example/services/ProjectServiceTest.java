@@ -70,7 +70,6 @@ class ProjectServiceTest {
 
         verify(mockView, times(1)).viewBy(predicateCaptor.capture(), eq(mockRepo));
 
-        // test predicate logic
         Project proj = new SoftwareProject("Test", "Desc", 1, 100, null);
         assertTrue(predicateCaptor.getValue().test(proj));
     }
