@@ -1,5 +1,17 @@
 [
   {
+    "id": "P004",
+    "name": "new pr using array",
+    "description": "desc",
+    "teamSize": 221,
+    "budget": 123.0,
+    "type": "HARDWARE",
+    "tasks": {
+      "repoType": "ListBasedTaskRepository",
+      "tasks": []
+    }
+  },
+  {
     "id": "P001",
     "name": "TestProject",
     "description": "Desc",
@@ -9,6 +21,43 @@
     "tasks": {
       "repoType": "ListBasedTaskRepository",
       "tasks": []
+    }
+  },
+  {
+    "id": "P003",
+    "name": "adsf",
+    "description": "dafad",
+    "teamSize": 12,
+    "budget": 2232.0,
+    "type": "SOFTWARE",
+    "tasks": {
+      "repoType": "ListBasedTaskRepository",
+      "tasks": []
+    }
+  },
+  {
+    "id": "P002",
+    "name": "adsfad",
+    "description": "dfa",
+    "teamSize": 12,
+    "budget": 23.0,
+    "type": "SOFTWARE",
+    "tasks": {
+      "repoType": "ListBasedTaskRepository",
+      "tasks": [
+        {
+          "status": "IN_PROGRESS",
+          "id": "T001",
+          "name": "ADF",
+          "projectId": "P003"
+        },
+        {
+          "status": "COMPLETED",
+          "id": "T002",
+          "name": "ADFADF",
+          "projectId": "P003"
+        }
+      ]
     }
   }
 ]

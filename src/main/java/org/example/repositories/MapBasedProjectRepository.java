@@ -29,7 +29,7 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
 
     @Override
     public void add(T project) {
-        projects.put(project.getId().toUpperCase(), project);
+        projects.put(project.getId(), project);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MapBasedProjectRepository<T extends Project> implements ProjectRepo
 
     @Override
     public T getById(String id) throws ProjectNotFoundException {
-        T project = projects.get(id);
+        T project = projects.get(id.toUpperCase());
 
         if (project == null) {
             throw new ProjectNotFoundException("Project not found with id: " + id);
