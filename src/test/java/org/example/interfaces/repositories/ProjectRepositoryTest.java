@@ -21,7 +21,7 @@ class ProjectRepositoryTest {
         // Use a dummy TaskRepository since Project needs it
         taskRepository = new ListBasedTaskRepository();
 
-        repo = new MapBasedProjectRepository<>(); // your concrete implementation
+        repo = new MapBasedProjectRepository<>();
     }
 
     @Test
