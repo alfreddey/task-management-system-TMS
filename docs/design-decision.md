@@ -1,10 +1,16 @@
 # DESIGN DECISION
 
 ## 1. Separation of Concerns and Encapsulation
-The project uses classes to logically organize entities like **User**, **Project**, and **Task**. Each class defines its attributes and behavior using specific access levels. To prevent unintended updates, fields are declared **private**, restricting direct access. Instead, the project provides public **getter and setter** methods to safely view or modify data. For example, the **Project** class uses these methods to manage its internal fields securely.
+The system uses the **Service-Repository-View** pattern, separating business logic, data storage, and UI. Fields are **private** to prevent direct access, with public methods for safe interaction. For example, **ListBasedProjectRepository** manages project storage via encapsulated methods.
 
-## 2. Inheritance
-The project leverages abstract classes to define common attributes and behaviors shared by related entities. The **User** class, for instance, establishes shared properties like `name` and `role`. By defining **User** as an abstract class, both **AdminUser** and **RegularUser** can extend it to inherit these base properties while adding their own specific functionality.
+## 2. Abstraction and Interfaces
+Interfaces define contracts for components, allowing flexible implementations. **ProjectRepository** and **TaskRepository** handle CRUD operations, while **ProjectView** and **TaskView** manage display. Concrete classes like **ArrayBasedProjectRepository** or **TableBasedTaskView** implement these without altering service logic.
 
-## 3. Polymorphism
-The project uses polymorphism to redefine specific methods, promoting code reusability. The **Project** abstract class defines an abstract method, **getProjectDetails**, which is implemented by its concrete subclasses. For example, **SoftwareProject** and **HardwareProject** both override this method to return their unique data. This ensures both classes share a consistent interface while providing custom implementations.
+## 3. Composition and Modular Relationships
+Services compose their repositories and views, shown in UML as diamond-headed arrows. **ProjectService** uses **ProjectRepository**, **ProjectView**, and **ReportCalculator** to coordinate operations, keeping modules independent yet integrated.
+
+## 4. Polymorphism and Flexibility
+Polymorphism allows multiple implementations, e.g., **DefaultReportCalculator** implements **ReportCalculator** methods like **calculateAverageCompletionRate()**. Storage mechanisms (List vs. Array) can be swapped without changing service logic.
+
+## 5. Consistency and UI Standards
+Table-based views use a private constant **ROW_WIDTH: int** for uniform formatting. Methods like **viewProjects()** and **viewTasks()** standardize data display across modules.
